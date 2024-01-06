@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+  <style>
+    body {
+      background-color: black;
+      color: white;
+      margin: 30px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    h1 {
+      font-size: 50px;
+      text-align: center;
+    }
+
+    h3 {
+      text-align: center;
+    }
+    
+    .indicador {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .circle-container {
+      display: flex;
+    }
+
+    .image-container {
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+    }
+
+    .circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 35px;
+      margin: 5px;
+    }
+
+    .container {  
+      display: grid;
+      margin: 50px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      text-align: center;
+      justify-content: space-between;
+      grid-template-areas: 
+        "Triage Admision Atencion-Medica Laboratorio"
+        "Radiologia Terapia-Respiratoria Interconsultas Facturacion";
+    }
+
+    .circle-items {
+      grid-template-areas: 
+        "Triage Admision Atencion-Medica Laboratorio"
+        "Radiologia Terapia-Respiratoria Interconsultas Facturacion";
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 50px;
+      margin: 15px;
+      background-color: #2ecc71;
+    }
+
+    /* Clases específicas para cada área */
+    .Triage { grid-area: Triage; }
+    .Admision { grid-area: Admision; }
+    .Atencion-Medica { grid-area: Atencion-Medica; }
+    .Laboratorio { grid-area: Laboratorio; }
+    .Radiologia { grid-area: Radiologia; }
+    .Terapia-Respiratoria { grid-area: Terapia-Respiratoria; }
+    .Interconsultas { grid-area: Interconsultas; }
+    .Facturacion { grid-area: Facturacion; }
+
+    /* Colores de los círculos */
+    .circle.blue { background-color: #3498db; }
+    .circle.red { background-color: #e74c3c; }
+    .circle.green { background-color: #2ecc71; }
+    .circle.orange { background-color: #e67e22; }
+    .circle.purple { background-color: #9b59b6; }
+
+    /* Invertir color de las imágenes */
+    .image-container img { filter: invert(1); }
+
+    /* Estilo para los textos */
+    p { margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>COMMAND CENTER - THE PANAMA CLINIC</h1>
+  <div class="indicador">
+    <div class="image-container">
+      <img src="https://i.ibb.co/znzWdnt/hombre.png" alt="hombre" width="80" height="80">
+      <div class="circle adulto">1</div>
+      <img src="https://i.ibb.co/NyHmSbb/bebe.png" alt="bebe" width="80" height="80">
+      <div class="circle babe">1</div>
+    </div>
+    <div class="circle-container">
+      <div class="circle blue">1</div>
+      <div class="circle red">1</div>
+      <div class="circle green">1</div>
+      <div class="circle orange">1</div>
+      <div class="circle purple">1</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Estructura para las áreas -->
+    <div class="Triage">
+      <h3>TRIAGE</h3>
+      <div class="circle-items">1</div>
+      <p>Paciente en Espera</p>
+    </div>
+
+    <div class="Admision">
+      <h3>TRIAGE</h3>
+      <div class="circle-items">1</div>
+      <p>Paciente en Espera</p>
+    </div>
+
+    <div class="Atencion-Medica">
+      <h3>ATENCION MEDICA</h3>
+      <div class="circle-items">1</div>
+      <p>Paciente en Espera</p>
+    </div>
+
+    <div class="Laboratorio">
+      <h3>TRIAGE</h3>
+      <div class="circle-items">1</div>
+      <p>Paciente en Espera</p>
+    </div>
+
+    <div class="Facturacion">
+      <h3>FACTURACIÓN</h3>
+      <div class="circle-items">00:00</div>
+      <p>Minutos en Espera</p>
+    </div>
+  </div>
+</body>
+</html>
