@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
   <style>
@@ -9,7 +10,7 @@
       margin: 30px;
       font-family: 'Montserrat', sans-serif;
     }
-    
+
     h1 {
       font-size: 50px;
       text-align: center;
@@ -18,7 +19,7 @@
     h3 {
       text-align: center;
     }
-    
+
     .indicador {
       display: flex;
       justify-content: space-between;
@@ -47,20 +48,20 @@
       margin: 5px;
     }
 
-    .container {  
+    .container {
       display: grid;
       margin: 50px;
       grid-template-columns: repeat(4, 1fr);
       gap: 20px;
       text-align: center;
       justify-content: space-between;
-      grid-template-areas: 
+      grid-template-areas:
         "Triage Admision Atencion-Medica Laboratorio"
         "Radiologia Terapia-Respiratoria Interconsultas Facturacion";
     }
 
     .circle-items {
-      grid-template-areas: 
+      grid-template-areas:
         "Triage Admision Atencion-Medica Laboratorio"
         "Radiologia Terapia-Respiratoria Interconsultas Facturacion";
       width: 200px;
@@ -76,29 +77,71 @@
     }
 
     /* Clases específicas para cada área */
-    .Triage { grid-area: Triage; }
-    .Admision { grid-area: Admision; }
-    .Atencion-Medica { grid-area: Atencion-Medica; }
-    .Laboratorio { grid-area: Laboratorio; }
-    .Radiologia { grid-area: Radiologia; }
-    .Terapia-Respiratoria { grid-area: Terapia-Respiratoria; }
-    .Interconsultas { grid-area: Interconsultas; }
-    .Facturacion { grid-area: Facturacion; }
+    .Triage {
+      grid-area: Triage;
+    }
+
+    .Admision {
+      grid-area: Admision;
+    }
+
+    .Atencion-Medica {
+      grid-area: Atencion-Medica;
+    }
+
+    .Laboratorio {
+      grid-area: Laboratorio;
+    }
+
+    .Radiologia {
+      grid-area: Radiologia;
+    }
+
+    .Terapia-Respiratoria {
+      grid-area: Terapia-Respiratoria;
+    }
+
+    .Interconsultas {
+      grid-area: Interconsultas;
+    }
+
+    .Facturacion {
+      grid-area: Facturacion;
+    }
 
     /* Colores de los círculos */
-    .circle.blue { background-color: #3498db; }
-    .circle.red { background-color: #e74c3c; }
-    .circle.green { background-color: #2ecc71; }
-    .circle.orange { background-color: #e67e22; }
-    .circle.purple { background-color: #9b59b6; }
+    .circle.blue {
+      background-color: #3498db;
+    }
+
+    .circle.red {
+      background-color: #e74c3c;
+    }
+
+    .circle.green {
+      background-color: #2ecc71;
+    }
+
+    .circle.orange {
+      background-color: #e67e22;
+    }
+
+    .circle.purple {
+      background-color: #9b59b6;
+    }
 
     /* Invertir color de las imágenes */
-    .image-container img { filter: invert(1); }
+    .image-container img {
+      filter: invert(1);
+    }
 
     /* Estilo para los textos */
-    p { margin: 5px; }
+    p {
+      margin: 5px;
+    }
   </style>
 </head>
+
 <body>
   <h1>COMMAND CENTER - THE PANAMA CLINIC</h1>
   <div class="indicador">
@@ -150,4 +193,5 @@
     </div>
   </div>
 </body>
+
 </html>
