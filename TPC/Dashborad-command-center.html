@@ -14,16 +14,32 @@
     h1 {
       font-size: 50px;
       text-align: center;
+      justify-self: center;
+      align-self: center;
     }
 
     h3 {
+      font-size: 25px;
       text-align: center;
+    }
+
+    p { 
+      margin: 5px; 
+      text-align: center;
+    }
+
+    git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+    .titulo-esi{
+      text-align: left;
     }
 
     .indicador {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 20px;
     }
 
     .circle-container {
@@ -48,97 +64,106 @@
       margin: 5px;
     }
 
-    .container {
-      display: grid;
-      margin: 50px;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      text-align: center;
-      justify-content: space-between;
-      grid-template-areas:
-        "Triage Admision Atencion-Medica Laboratorio"
-        "Radiologia Terapia-Respiratoria Interconsultas Facturacion";
-    }
-
     .circle-items {
-      grid-template-areas:
-        "Triage Admision Atencion-Medica Laboratorio"
-        "Radiologia Terapia-Respiratoria Interconsultas Facturacion";
-      width: 200px;
-      height: 200px;
+      width: 225px;
+      height: 225px;
       border-radius: 50%;
+      font-weight: 600;
+      color: white;
+      border: 2px solid white;
+      font-size: 90px;
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
-      font-size: 50px;
-      margin: 15px;
+      background-color: #2ecc71;
+    }
+
+    .circle-items-tiempo {
+      font-size: 75px;
+      width: 225px;
+      height: 225px;
+      font-weight: 600;
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      border: 2px solid white;
       background-color: #2ecc71;
     }
 
     /* Clases específicas para cada área */
-    .Triage {
-      grid-area: Triage;
+    .container {  
+      display: grid;
+      grid-template-columns: 300px 300px 300px 300px;
+      grid-template-rows: 300px 300px;
+      grid-auto-columns: 300px;
+      gap: 50px;
+      grid-auto-flow: column;
+      justify-content: space-between;
+      grid-template-areas:
+      "TRIAGE ADMISION ATENCION-MEDICA LABORATORIO"
+      "RADIOLOGIA TERAPIA-RESPIRATORIA INTERCONSULTAS FACTURACION";
     }
 
-    .Admision {
-      grid-area: Admision;
+    .TRIAGE {
+      justify-self: center;
+      align-self: center;
+      grid-area: TRIAGE;
     }
 
-    .Atencion-Medica {
-      grid-area: Atencion-Medica;
+    .ADMISION {
+      justify-self: center;
+      align-self: center;
+      grid-area: ADMISION;
     }
 
-    .Laboratorio {
-      grid-area: Laboratorio;
+    .ATENCION-MEDICA {
+      justify-self: center;
+      align-self: center;
+      grid-area: ATENCION-MEDICA;
     }
 
-    .Radiologia {
-      grid-area: Radiologia;
+    .LABORATORIO {
+      justify-self: center;
+      align-self: center;
+      grid-area: LABORATORIO;
     }
 
-    .Terapia-Respiratoria {
-      grid-area: Terapia-Respiratoria;
+    .RADIOLOGIA {
+      justify-self: center;
+      align-self: center;
+      grid-area: RADIOLOGIA;
     }
 
-    .Interconsultas {
-      grid-area: Interconsultas;
+    .TERAPIA-RESPIRATORIA {
+      justify-self: center;
+      align-self: center;
+      grid-area: TERAPIA-RESPIRATORIA;
     }
 
-    .Facturacion {
-      grid-area: Facturacion;
+    .INTERCONSULTAS {
+      justify-self: center;
+      align-self: center;
+      grid-area: INTERCONSULTAS;
+    }
+
+    .FACTURACION {
+      justify-self: center;
+      align-self: center;
+      grid-area: FACTURACION;
     }
 
     /* Colores de los círculos */
-    .circle.blue {
-      background-color: #3498db;
-    }
-
-    .circle.red {
-      background-color: #e74c3c;
-    }
-
-    .circle.green {
-      background-color: #2ecc71;
-    }
-
-    .circle.orange {
-      background-color: #e67e22;
-    }
-
-    .circle.purple {
-      background-color: #9b59b6;
-    }
+    .circle.blue { background-color: #3498db; }
+    .circle.red { background-color: #e74c3c; }
+    .circle.green { background-color: #2ecc71; }
+    .circle.orange { background-color: #e67e22; }
+    .circle.purple { background-color: #9b59b6; }
 
     /* Invertir color de las imágenes */
-    .image-container img {
-      filter: invert(1);
-    }
-
-    /* Estilo para los textos */
-    p {
-      margin: 5px;
-    }
+    .image-container img { filter: invert(1); }
+    
   </style>
 </head>
 
@@ -160,38 +185,110 @@
     </div>
   </div>
 
+  <div class="titulo-esi">
+    Clasificacion ESI
+  </div>
+
+  
   <div class="container">
-    <!-- Estructura para las áreas -->
-    <div class="Triage">
-      <h3>TRIAGE</h3>
-      <div class="circle-items">1</div>
-      <p>Paciente en Espera</p>
+    <div class="TRIAGE">
+      <h3>
+        Triage
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
+    </div>
+    
+    <div class="ADMISION">
+      <h3>
+        Admision
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
     </div>
 
-    <div class="Admision">
-      <h3>TRIAGE</h3>
-      <div class="circle-items">1</div>
-      <p>Paciente en Espera</p>
+    <div class="ATENCION-MEDICA">
+      <h3>
+        Atencion Medica
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
     </div>
 
-    <div class="Atencion-Medica">
-      <h3>ATENCION MEDICA</h3>
-      <div class="circle-items">1</div>
-      <p>Paciente en Espera</p>
+    <div class="LABORATORIO">
+      <h3>
+        Laboratorio
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
     </div>
 
-    <div class="Laboratorio">
-      <h3>TRIAGE</h3>
-      <div class="circle-items">1</div>
-      <p>Paciente en Espera</p>
+    <div class="RADIOLOGIA">
+      <h3>
+        Radiologia
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
     </div>
 
-    <div class="Facturacion">
-      <h3>FACTURACIÓN</h3>
-      <div class="circle-items">00:00</div>
-      <p>Minutos en Espera</p>
+    <div class="TERAPIA-RESPIRATORIA">
+      <h3>
+        Terapia Respiratoria
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
+    </div>
+
+    <div class="INTERCONSULTAS">
+      <h3>
+        Interconsultas
+      </h3>
+      <div class="circle-items">
+        1
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
+    </div>
+
+    <div class="FACTURACION">
+      <h3>
+        Facturacion
+      </h3>
+      <div class="circle-items-tiempo">
+        00:00
+      </div>
+      <p>
+        Pacientes en esperas
+      </p>
     </div>
   </div>
+
+
 </body>
 
 </html>
