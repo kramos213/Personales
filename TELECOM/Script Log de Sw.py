@@ -2,62 +2,88 @@ import paramiko
 import datetime
 import os
 import time
+import re
 
 # Diccionario con IPs organizadas por piso o área
 switch_ips_by_area = {
-    "PSO": ["ip del host"],
+    "area": ["ip del host"],
+
     # Agrega más pisos o áreas según sea necesario
 }
 
+
 # Credenciales de acceso a los switches
-username = 'xxx'
-password = 'xxx'
+username = 'xx'
+password = 'xxxx'
 
 # Especifica la carpeta donde se guardarán los logs
-log_folder = "C:/Users/kramos/Desktop/Scritp de Respaldos/Log Sw"  # Cambia esta ruta por la ruta de tu carpeta de logs
+log_folder = "C:/Users/kramos/Desktop/Scritp de Respaldos/Log Sw"
 
-# Asegúrate de que la carpeta exista; si no, créala
 if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
-# Nombre del archivo de log basado en la fecha y hora actual
 log_filename = os.path.join(log_folder, f"log_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.txt")
 
-# Función para registrar mensajes en el archivo de log
 def log_message(message):
     with open(log_filename, 'a') as log_file:
         log_file.write(message + '\n')
 
+def extract_datetime_from_log(log_entry):
+    """
+    Extrae la fecha y hora de una entrada de log.
+    Ajusta el patrón de acuerdo al formato de tu log.
+    """
+    pattern = r"(\w+\s+\d+\s+\d+:\d+:\d+)"  # Ejemplo: Aug 31 15:45:30
+    match = re.search(pattern, log_entry)
+    if match:
+        log_time_str = match.group(1)
+        log_time = datetime.datetime.strptime(log_time_str, "%b %d %H:%M:%S")
+        # Ajustar el año actual
+        log_time = log_time.replace(year=datetime.datetime.now().year)
+        return log_time
+    return None
+
+def analyze_log(output):
+    events = []
+    now = datetime.datetime.now()
+    lines = output.splitlines()
+
+    # Palabras clave para eventos importantes
+    important_keywords = ["error", "fail", "critical", "warning", "down", "up", "offline"]
+
+    for line in lines:
+        log_time = extract_datetime_from_log(line)
+        
+        if log_time and (now - log_time).days < 1:
+            if any(keyword in line.lower() for keyword in important_keywords):
+                events.append(line)
+    
+    return events
+
 def execute_commands(switch_ip, area, commands):
     try:
-        # Crear una instancia SSHClient
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        
-        # Conectarse al switch
         ssh.connect(switch_ip, username=username, password=password)
-        
-        # Crear una instancia de transporte para el canal
         shell = ssh.invoke_shell()
-        time.sleep(2)  # Esperar para que la conexión se estabilice
+        time.sleep(2)
         
-        # Ejecutar los comandos
         for command in commands:
             shell.send(f'{command}\n')
-            time.sleep(2)  # Ajustar el tiempo según sea necesario
+            time.sleep(5)
             output = shell.recv(65535).decode()
 
-            # Mensaje de éxito o fallo
-            if output:
-                message = f"Comando '{command}' ejecutado con éxito en {switch_ip} ({area}):\n{output}"
+            events = analyze_log(output)
+            if events:
+                for event in events:
+                    message = f"Evento importante detectado en {switch_ip} ({area}): {event}"
+                    print(message)
+                    log_message(message)
             else:
-                message = f"Error al ejecutar comando '{command}' en {switch_ip} ({area})."
-            
-            # Imprimir y guardar en el log
-            print(message)
-            log_message(message)
+                message = f"No se detectaron eventos importantes en {switch_ip} ({area})."
+                print(message)
+                log_message(message)
         
-        # Cerrar la conexión
         ssh.close()
     
     except Exception as e:
@@ -79,12 +105,10 @@ def execute_commands_on_all_switches(commands):
         log_message(end_message)
 
 if __name__ == "__main__":
-    # Definir los comandos a ejecutar
     commands = [
         'en',
-        'sh int status'  # Agregar el comando 'wr' al final para guardar los cambios
+        'terminal length 0',
+        'sh log'
     ]
     
-    # Ejecutar los comandos en todos los switches
     execute_commands_on_all_switches(commands)
-
