@@ -7,8 +7,8 @@ from loguru import logger
 
 # Diccionario con IPs organizadas por piso o área
 switch_ips_by_area = {
-    "P06-IT": ["172.16.0.201", "172.16.0.224"]
-    # Agrega más áreas según sea necesario
+    "PXX": ["IP","IP"]
+    # Agrega más pisos o áreas según sea necesario
 }
 
 # Carpeta para guardar los logs
@@ -148,8 +148,8 @@ if __name__ == "__main__":
                     new_password = None
 
             # Credenciales de SSH
-            ssh_username = 'TPC'
-            ssh_password = 'Tpc2020*'
+            ssh_username = 'XXX'
+            ssh_password = 'XXXX*'
 
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [

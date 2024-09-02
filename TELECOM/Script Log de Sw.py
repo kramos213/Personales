@@ -6,19 +6,8 @@ from loguru import logger
 
 # Diccionario con IPs organizadas por piso o área
 switch_ips_by_area = {
-    "PSO": ["172.16.0.151", "172.16.0.150", "172.16.0.118", "172.16.0.101", "172.16.0.147", "172.16.0.148", "172.16.0.116"],
-    "PPB": ["172.16.0.105", "172.16.0.103", "172.16.0.104", "172.16.0.142", "172.16.0.143", "172.16.0.106", "172.16.0.107"],
-    "P06": ["172.16.0.108", "172.16.0.109", "172.16.0.202", "172.16.0.140", "172.16.0.146"],
-    "P07": ["172.16.0.110", "172.16.0.111", "172.16.0.112", "172.16.0.141", "172.16.0.115"],
-    "P08": ["172.16.0.113", "172.16.0.114"],
-    "P09": ["172.16.0.120", "172.16.0.121", "172.16.0.119"],
-    "P10": ["172.16.0.123", "172.16.0.124"],
-    "P11": ["172.16.0.125", "172.16.0.137", "172.16.0.126", "172.16.0.139"],
-    "P14": ["172.16.0.127", "172.16.0.128"],
-    "P16": ["172.16.0.129", "172.16.0.130", "172.16.0.138"],
-    "P17": ["172.16.0.131", "172.16.0.132", "172.16.0.136"],
-    "P18": ["172.16.0.133", "172.16.0.134", "172.16.0.135"],
-    "P24": ["172.16.0.200", "172.16.0.145"]
+    "PXX": ["IP","IP"]
+    # Agrega más pisos o áreas según sea necesario
 }
 
 # Carpeta base para guardar el log
@@ -124,8 +113,8 @@ def fetch_and_analyze_logs(switch_ip, area, ssh_username, ssh_password, keywords
 
 if __name__ == "__main__":
     keywords = ['error', 'down', 'up', 'warning']  # Palabras clave para filtrar los logs.
-    ssh_username = 'TPC'
-    ssh_password = 'Tpc2020*'
+    ssh_username = 'XXX'
+    ssh_password = 'XXX*'
 
     # Procesar cada IP de manera secuencial por área
     for area, ips in switch_ips_by_area.items():
