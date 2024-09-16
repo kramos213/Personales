@@ -9,6 +9,8 @@ switch_ips_by_area = {
     # Agrega más pisos o áreas según sea necesario
 }
 
+#
+
 # Credenciales y configuración del servidor TFTP
 username = 'XXX'
 password = 'XXXXX'
