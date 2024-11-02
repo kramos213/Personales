@@ -28,7 +28,7 @@ username = "TPC"
 password = "Tpc2020*"
 
 # Configuración de carpeta para guardar logs
-log_folder = "logs"
+log_folder = "C:/Users/kramos/Desktop/Log de Script/Monitoreo red"
 if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
@@ -38,9 +38,6 @@ sender_password = "Informatica2019"
 receiver_email = "kramos@thepanamaclinic.com"
 smtp_server = "smtp.office365.com"
 smtp_port = 587
-
-# Comando para obtener logs del switch
-log_command = "show log"
 
 # Fecha de hoy para filtrar
 today_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -107,7 +104,14 @@ def send_confirmation_email():
         print(f"Error al enviar el correo de confirmación: {e}")
 
 # Palabras clave específicas para filtrar mensajes críticos
-keywords = ["disabled learning on", "re-enabled learning on", "port down notification", "ERROR", "HSL: ERROR"]
+keywords = [
+    "disabled learning on",
+    "re-enabled learning on",
+    "port down notification received",
+    "port up notification received",
+    "ERROR",
+    "HSL: ERROR"
+]
 
 # Función de monitoreo para cada switch
 def monitor_switch(ip):
@@ -118,15 +122,19 @@ def monitor_switch(ip):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(ip, username=username, password=password)
-        stdin, stdout, stderr = ssh.exec_command(log_command)
+
+        # Ingresar al modo enable y ejecutar el comando para obtener los logs
+        ssh.exec_command("enable")
+        ssh.exec_command("terminal length 0")
+        stdin, stdout, stderr = ssh.exec_command("show log")
         logs = stdout.read().decode()
         ssh.close()
 
         # Filtrar los mensajes críticos del día actual que contengan alguna de las palabras clave
         critical_logs = []
         for line in logs.splitlines():
-            # Verifica si la línea contiene la fecha de hoy y alguna de las frases clave exactas
-            if today_date in line and any(keyword in line.lower() for keyword in keywords):
+            # Verifica si la línea contiene alguna de las frases clave exactas
+            if any(keyword in line.lower() for keyword in keywords):
                 critical_logs.append(line)
 
         # Enviar alerta si hay mensajes críticos del día actual
@@ -145,11 +153,19 @@ def monitor_switch(ip):
             print(f"Revisión completada en {ip}, sin problemas detectados.")
 
     except Exception as e:
-        error_message = f"Error al conectar con {ip}: {e}"
+        error_message = f"Error al conectar con {ip}: {str(e)}"
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         with open(log_file, "a") as file:
             file.write(f"\n[{timestamp}] {error_message}\n")
-        print(error_message)
+        
+        # Mensaje de error específico para enviar por correo
+        connection_error_message = f"Se produjo un error durante el intento de conexión a {ip}. Motivo: {str(e)}"
+        print(connection_error_message)
+        with open(log_file, "a") as file:
+            file.write(f"\n[{timestamp}] {connection_error_message}\n")
+        
+        # Enviar correo de alerta por error de conexión
+        send_email_alert(ip, connection_error_message)
 
 # Función principal para monitorear todos los switches
 def main():
