@@ -28,7 +28,7 @@ username = "TPC"
 password = "Tpc2020*"
 
 # Configuración de carpeta para guardar logs
-log_folder = "C:/Users/kramos/Desktop/Log de Script/Monitoreo red"
+log_folder = "/Users/kevinramos/Desktop/Log de Monitoreo de Red"
 if not os.path.exists(log_folder):
     os.makedirs(log_folder)
 
@@ -125,8 +125,8 @@ def monitor_switch(ip):
 
         # Ingresar al modo enable y ejecutar el comando para obtener los logs
         ssh.exec_command("enable")
-        ssh.exec_command("terminal length 0")
-        stdin, stdout, stderr = ssh.exec_command("show log")
+        #ssh.exec_command("terminal length 0")
+        stdin, stdout, stderr = ssh.exec_command("show log tail 50")
         logs = stdout.read().decode()
         ssh.close()
 
