@@ -3,13 +3,18 @@ import os
 import chardet
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
+import platform
 
-# Ruta a la carpeta con tus CSV
-folder_path = "Z:/Monitoreo de red/Reporte de Switches"
-
-# Ruta para almacenar el Data Warehouse
-database_path = "Z:/Monitoreo de red/DataWarehouse/DataWarehouse.db"
-os.makedirs(os.path.dirname(database_path), exist_ok=True)
+if platform.system() == "Windows":
+    # Ruta de la base de datos (SQLite en este caso)
+    database_path = "Z:/Monitoreo de red/DataWarehouse/DataWarehouse.db"
+    os.makedirs(os.path.dirname(database_path), exist_ok=True)
+    # Definir la carpeta con los archivos CSV
+    folder_path = "Z:/Monitoreo de red/Reporte de Switches"
+    
+else:  # macOS o Linux
+    database_path = "/Volumes/Sophos/Monitoreo de red/DataWarehouse/DataWarehouse.db"
+    carpeta = "/Volumes/Sophos/Monitoreo de red/Reporte de Switches"
 
 # Función para detectar la codificación de un archivo
 def detectar_codificacion(file_path):

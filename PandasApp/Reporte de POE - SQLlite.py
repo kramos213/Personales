@@ -2,12 +2,16 @@ import os
 import pandas as pd
 from sqlalchemy import create_engine, text
 import chardet
+import platform
 
-# Ruta de la base de datos (SQLite en este caso)
-database_path = "Z:/Monitoreo de red/DataWarehouse/DataWarehouse.db"
-
-# Definir la carpeta con los archivos CSV
-carpeta = r"Z:/Monitoreo de red/Prueba"
+if platform.system() == "Windows":
+    # Ruta de la base de datos (SQLite en este caso)
+    database_path = "Z:/Monitoreo de red/DataWarehouse/DataWarehouse.db"
+    # Definir la carpeta con los archivos CSV
+    carpeta = "Z:/Monitoreo de red/Poe Puertos"
+else:  # macOS o Linux
+    database_path = "/Volumes/Sophos/Monitoreo de red/DataWarehouse/DataWarehouse.db"
+    carpeta = "/Volumes/Sophos/Monitoreo de red/Poe Puertos"
 
 # Obtener todos los archivos CSV en la carpeta
 archivos_csv = [os.path.join(carpeta, f) for f in os.listdir(carpeta) if f.endswith('.csv')]
