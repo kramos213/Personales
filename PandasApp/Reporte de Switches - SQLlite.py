@@ -3,6 +3,7 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import chardet
 import platform
+from datetime import datetime, timedelta
 
 # Configurar rutas según el sistema operativo
 if platform.system() == "Windows":
@@ -30,9 +31,20 @@ def procesar_archivos_csv(folder_path, processed_files_path):
     else:
         processed_files = set()
 
-    # Obtener lista de archivos no procesados
+    # Obtener lista de archivos en la carpeta
     all_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith('.csv')]
-    unprocessed_files = [f for f in all_files if f not in processed_files]
+
+    # Considerar archivos modificados en las últimas 24 horas
+    last_24_hours = datetime.now() - timedelta(hours=24)
+    unprocessed_files = [
+        f for f in all_files if f not in processed_files and
+        datetime.fromtimestamp(os.path.getmtime(f)) > last_24_hours
+    ]
+
+    # Imprimir información para depuración
+    print("Archivos procesados:", processed_files)
+    print("Archivos encontrados:", all_files)
+    print("Archivos no procesados o recientes:", unprocessed_files)
 
     if not unprocessed_files:
         print("No hay archivos nuevos para procesar.")
@@ -50,10 +62,9 @@ def procesar_archivos_csv(folder_path, processed_files_path):
             df = pd.read_csv(file, encoding=encoding, delimiter=',', on_bad_lines='skip')
             dataframes.append(df)
 
-
             # Registrar el archivo como procesado
             with open(processed_files_path, 'a') as f:
-                f.write(f"{file}\n")
+                f.write(f"{os.path.abspath(file)}\n")
         except Exception as e:
             print(f"Error al procesar el archivo {file}: {e}")
 

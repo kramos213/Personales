@@ -44,7 +44,7 @@ def save_results(devices):
 
 if __name__ == "__main__":
     # Configura el rango de red
-    network_range = "192.168.1.0/24"  # Cambia al rango de tu red
+    network_range = "10.1.7.0/24"  # Cambia al rango de tu red
 
     # Escaneo de red
     devices = scan_network(network_range)
