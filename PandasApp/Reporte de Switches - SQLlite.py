@@ -2,123 +2,104 @@ import os
 import pandas as pd
 from sqlalchemy import create_engine, text
 import chardet
-import platform
+from pathlib import Path
 from datetime import datetime, timedelta
 
 # Configurar rutas según el sistema operativo
-if platform.system() == "Windows":
-    database_path = "Z:/Monitoreo de red/DataWarehouse/DataWarehouse.db"
-    folder_path = "Z:/Monitoreo de red/Reporte de Switches"
-    processed_files_path = "Z:/Monitoreo de red/DataWarehouse/processed_files.txt"
-else:  # macOS o Linux
-    database_path = "/Volumes/Sophos/Monitoreo de red/DataWarehouse/DataWarehouse.db"
-    folder_path = "/Volumes/Sophos/Monitoreo de red/Reporte de Switches"
-    processed_files_path = "/Volumes/Sophos/Monitoreo de red/DataWarehouse/processed_files.txt"
+base_path = Path("Z:/Monitoreo de red" if os.name == "nt" else "/Volumes/Sophos/Monitoreo de red")
+database_path = base_path / "DataWarehouse/DataWarehouse.db"
+folder_path = base_path / "Reporte de Switches"
+processed_files_path = base_path / "DataWarehouse/processed_files_RepSwitch.txt"
+
+# Crear directorios necesarios
+processed_files_path.parent.mkdir(parents=True, exist_ok=True)
 
 # Función para detectar la codificación de un archivo
 def detectar_codificacion(file_path):
-    with open(file_path, 'rb') as f:
-        rawdata = f.read(10000)  # Leer los primeros 10 KB
-    resultado = chardet.detect(rawdata)
-    return resultado['encoding']
+    try:
+        with open(file_path, 'rb') as f:
+            rawdata = f.read(10000)  # Leer los primeros 10 KB
+        resultado = chardet.detect(rawdata)
+        return resultado['encoding'] or 'utf-8'
+    except Exception as e:
+        print(f"Error detectando la codificación del archivo {file_path}: {e}")
+        return 'utf-8'  # Valor predeterminado si falla la detección
 
-# Función para cargar y procesar los archivos CSV
-def procesar_archivos_csv(folder_path, processed_files_path):
-    # Leer lista de archivos procesados
-    if os.path.exists(processed_files_path):
-        with open(processed_files_path, 'r') as file:
-            processed_files = set(file.read().splitlines())
-    else:
-        processed_files = set()
+# Función para procesar archivos CSV
+def procesar_archivos_csv(folder_path, processed_files_path, debug=False):
+    processed_files = set(processed_files_path.read_text().splitlines()) if processed_files_path.exists() else set()
+    all_files = [file for file in folder_path.glob("*.csv")]
 
-    # Obtener lista de archivos en la carpeta
-    all_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith('.csv')]
-
-    # Considerar archivos modificados en las últimas 24 horas
-    last_24_hours = datetime.now() - timedelta(hours=24)
     unprocessed_files = [
-        f for f in all_files if f not in processed_files and
-        datetime.fromtimestamp(os.path.getmtime(f)) > last_24_hours
+        file for file in all_files if str(file) not in processed_files
     ]
 
-    # Imprimir información para depuración
-    print("Archivos procesados:", processed_files)
-    print("Archivos encontrados:", all_files)
-    print("Archivos no procesados o recientes:", unprocessed_files)
+    if debug:
+        print("Archivos procesados:", processed_files)
+        print("Archivos encontrados:", all_files)
+        print("Archivos no procesados:", unprocessed_files)
 
     if not unprocessed_files:
         print("No hay archivos nuevos para procesar.")
         return None
 
     dataframes = []
-    for i, file in enumerate(unprocessed_files, 1):
-        print(f"Leyendo archivo {i}/{len(unprocessed_files)}: {file}")
+    for file in unprocessed_files:
         try:
-            # Detectar codificación
             encoding = detectar_codificacion(file)
-            print(f"  - Codificación detectada: {encoding}")
-            
-            # Leer el archivo CSV
-            df = pd.read_csv(file, encoding=encoding, delimiter=',', on_bad_lines='skip')
+            df = pd.read_csv(file, encoding=encoding, on_bad_lines='skip')
             dataframes.append(df)
-
-            # Registrar el archivo como procesado
-            with open(processed_files_path, 'a') as f:
-                f.write(f"{os.path.abspath(file)}\n")
+            with processed_files_path.open('a') as f:
+                f.write(f"{file}\n")
         except Exception as e:
             print(f"Error al procesar el archivo {file}: {e}")
 
-    if dataframes:
-        return pd.concat(dataframes, ignore_index=True)
-    else:
-        print("No se pudieron consolidar archivos.")
+    return pd.concat(dataframes, ignore_index=True) if dataframes else None
+
+# Función para limpiar y normalizar un DataFrame
+def limpiar_y_normalizar_df(df):
+    try:
+        df_cleaned = df.dropna()
+        df_cleaned.columns = [col.strip().lower().replace(' ', '_') for col in df_cleaned.columns]
+
+        for col in df_cleaned.columns:
+            if 'fecha' in col or 'date' in col:
+                df_cleaned[col] = pd.to_datetime(df_cleaned[col], errors='coerce')
+
+        return df_cleaned
+    except Exception as e:
+        print(f"Error al limpiar y normalizar el DataFrame: {e}")
         return None
 
-# Función para limpiar y normalizar el DataFrame
-def limpiar_y_normalizar_df(df):
-    df_cleaned = df.dropna()
-    df_cleaned['Fecha'] = pd.to_datetime(df_cleaned['Fecha'], errors='coerce')
-    df_cleaned.rename(columns=lambda x: x.strip().lower().replace(' ', '_'), inplace=True)
-
-    # Convertir tipos de datos
-    df_cleaned['ip_del_switch'] = df_cleaned['ip_del_switch'].astype(str)
-    df_cleaned['área'] = df_cleaned['área'].astype(str)
-    df_cleaned['evento'] = df_cleaned['evento'].astype(str)
-    df_cleaned['puerto'] = df_cleaned['puerto'].astype(str)
-    df_cleaned['detalles'] = df_cleaned['detalles'].astype(str)
-    return df_cleaned
-
-# Función para cargar datos a la base de datos
-def cargar_datos_bd(df, database_path, table_name):
+# Función para cargar datos en la base de datos sin duplicados
+def cargar_datos_bd_sin_duplicados(df, database_path, table_name):
     engine = create_engine(f'sqlite:///{database_path}')
     with engine.connect() as connection:
-        # Verificar si la tabla existe
-        query = text(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';")
-        result = connection.execute(query)
-        table_exists = result.fetchone()
-
-        if table_exists:
-            print(f"La tabla '{table_name}' ya existe.")
-        else:
+        # Crear tabla si no existe
+        if not connection.execute(text(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';")).fetchone():
             print(f"La tabla '{table_name}' no existe. Creando tabla nueva.")
-            df.head(0).to_sql(table_name, engine, if_exists='replace', index=False)
+            df.to_sql(table_name, engine, if_exists='replace', index=False)
+        else:
+            print("Actualizando datos existentes.")
+            existing_df = pd.read_sql_query(f"SELECT * FROM {table_name}", engine)
+            combined_df = pd.concat([existing_df, df]).drop_duplicates()
+            combined_df.to_sql(table_name, engine, if_exists='replace', index=False)
 
-    # Cargar datos
-    try:
-        df.to_sql(table_name, engine, if_exists='append', index=False)
-        print(f"Datos cargados en la tabla '{table_name}'.")
-    except Exception as e:
-        print(f"Error al cargar los datos en la base de datos: {e}")
-        return
-
-    # Validar datos cargados
-    with engine.connect() as connection:
-        query = text(f"SELECT COUNT(*) FROM {table_name}")
-        result = connection.execute(query)
-        print(f"Total de registros en la tabla '{table_name}': {result.scalar()}")
+        # Validar datos cargados
+        total_records = connection.execute(text(f"SELECT COUNT(*) FROM {table_name}")).scalar()
+        print(f"Total de registros en la tabla '{table_name}': {total_records}")
 
 # Main
-df = procesar_archivos_csv(folder_path, processed_files_path)
-if df is not None:
-    df_cleaned = limpiar_y_normalizar_df(df)
-    cargar_datos_bd(df_cleaned, database_path, "Reporte_switches")
+def main():
+    df = procesar_archivos_csv(folder_path, processed_files_path, debug=True)
+    if df is not None:
+        df_cleaned = limpiar_y_normalizar_df(df)
+        if df_cleaned is not None:
+            cargar_datos_bd_sin_duplicados(df_cleaned, database_path, "Reporte_switches")
+        else:
+            print("El DataFrame no pudo ser limpiado.")
+    else:
+        print("No se encontraron datos para procesar.")
+
+if __name__ == "__main__":
+    main()
