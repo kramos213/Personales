@@ -24,17 +24,13 @@ switch_ips_by_area = {
     "P24": ["172.16.0.200", "172.16.0.145"]
 }
 
-# Comandos para puertos activos e inactivos
-COMMAND_DOWN = "sh int brief | inc dow"     # Puertos inactivos
-COMMAND_RUNNING = "sh int brief | inc running"  # Puertos activos
 
-# Patrón para puertos excluidos (X.0.49 y superiores)
-#EXCLUDE_PATTERN = re.compile(r"^\d+\.0\.(49|[5-9][0-9]{1,})\s")
+# Comando para obtener el estado de las VLANs
+COMMAND_VLAN = "sh vlan brief"
 
-def count_ports(ip):
-    """Conecta al switch y cuenta los puertos activos e inactivos, excluyendo `lo`, `vlan` y `X.0.49` o superiores."""
-    ports_down = 0
-    ports_running = 0
+def count_vlans(ip):
+    """Conecta al switch y cuenta cuántos puertos están configurados para cada VLAN, excluyendo la VLAN 1 y líneas con '======'."""
+    vlan_counts = {}
 
     try:
         # Conexión SSH al switch
@@ -42,32 +38,39 @@ def count_ports(ip):
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         client.connect(ip, username=USERNAME, password=PASSWORD)
 
-        # Comando para puertos inactivos
-        stdin, stdout, stderr = client.exec_command(COMMAND_DOWN)
-        output_down = stdout.read().decode('utf-8')
-        for line in output_down.splitlines():
-            #print(f"Procesando línea inactiva: {line}")  # Depuración
-            if not line.startswith(("lo", "vlan")): #and not EXCLUDE_PATTERN.match(line):
-                ports_down += 1
+        # Comando para obtener el estado de las VLANs
+        stdin, stdout, stderr = client.exec_command(COMMAND_VLAN)
+        output_vlan = stdout.read().decode('utf-8')
 
-        # Comando para puertos activos
-        stdin, stdout, stderr = client.exec_command(COMMAND_RUNNING)
-        output_running = stdout.read().decode('utf-8')
-        for line in output_running.splitlines():
-            #print(f"Procesando línea activa: {line}")  # Depuración
-            if not line.startswith(("lo", "vlan")): #and not EXCLUDE_PATTERN.match(line):
-                ports_running += 1
+        # Procesar las líneas de la salida
+        for line in output_vlan.splitlines():
+            # Excluir la VLAN 1 (default) y líneas con '======'
+            if "1       default" in line or "=======" in line:
+                continue
+
+            # Buscar el número de VLAN y los puertos asociados
+            parts = line.split()
+            if len(parts) > 4:
+                vlan_id = parts[0]
+                vlan_ports = parts[4:]
+
+                # Contar puertos
+                vlan_ports_count = sum(1 for port in vlan_ports if port.startswith("port"))
+
+                if vlan_id not in vlan_counts:
+                    vlan_counts[vlan_id] = 0
+                vlan_counts[vlan_id] += vlan_ports_count
 
         client.close()
-        return {"ip": ip, "ports_running": ports_running, "ports_down": ports_down}
+        return {"ip": ip, "vlan_counts": vlan_counts}
 
     except Exception as e:
         return {"ip": ip, "error": str(e)}
 
 def process_area(area, ips, csv_writer):
-    """Procesa todos los switches en un área específica y guarda resultados en CSV."""
+    """Procesa todos los switches en un área específica y guarda los resultados en un archivo CSV."""
     with ThreadPoolExecutor() as executor:
-        results = list(executor.map(count_ports, ips))
+        results = list(executor.map(count_vlans, ips))
     
     print(f"\nResultados para el área {area}:")
     for result in results:
@@ -75,20 +78,21 @@ def process_area(area, ips, csv_writer):
             print(f"Switch {result['ip']}: Error - {result['error']}")
             csv_writer.writerow([area, result['ip'], "ERROR", "ERROR", result['error']])
         else:
-            print(f"Switch {result['ip']}: Puertos ACTIVOS: {result['ports_running']}, Puertos INACTIVOS: {result['ports_down']}")
-            csv_writer.writerow([area, result['ip'], result['ports_running'], result['ports_down'], "OK"])
+            for vlan_id, port_count in result["vlan_counts"].items():
+                print(f"Switch {result['ip']}: VLAN {vlan_id} tiene {port_count} puertos configurados.")
+                csv_writer.writerow([area, result['ip'], vlan_id, port_count, "OK"])
 
 def main():
     # Directorio para guardar el archivo CSV
-    output_dir = r"C:/Users/kramos/Desktop/Log de Script/Reporte Puerto"
+    output_dir = r"C:/Users/kramos/Desktop/TPC2025"
     os.makedirs(output_dir, exist_ok=True)
-    csv_filename = os.path.join(output_dir, "resultados_switches.csv")
+    csv_filename = os.path.join(output_dir, "resultados_vlans.csv")
 
     # Crear y escribir en el archivo CSV
     with open(csv_filename, mode='w', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         # Escribir encabezado
-        csv_writer.writerow(["Área", "IP del Switch", "Puertos Activos", "Puertos Inactivos", "Estado"])
+        csv_writer.writerow(["Área", "IP del Switch", "VLAN ID", "Puertos Configurados", "Estado"])
 
         for area, ips in switch_ips_by_area.items():
             process_area(area, ips, csv_writer)
