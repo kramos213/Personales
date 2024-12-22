@@ -226,31 +226,6 @@ def dashboard():
                 margin-top: 0;
             }
         </style>
-        <script>
-            function toggleMode() {
-                document.body.classList.toggle('light-mode');
-            }
-            function showDetails(ip) {
-                const details = {{ switch_details | tojson | safe }}[ip];
-                if (details) {
-                    const modal = document.getElementById('detailsModal');
-                    document.getElementById('modalContent').innerHTML = `
-                        <h3>Detalles del Switch</h3>
-                        <p><strong>IP:</strong> ${ip}</p>
-                        <p><strong>Piso:</strong> ${details.PISO}</p>
-                        <p><strong>Área:</strong> ${details.AREA}</p>
-                        <p><strong>Cantidad:</strong> ${details.CANTIDAD}</p>
-                        <p><strong>Modelo:</strong> ${details.MODELO}</p>
-                        <p><strong>Serial:</strong> ${details.SERIAL}</p>
-                        <p><strong>Versión:</strong> ${details.VERSION}</p>
-                    `;
-                    modal.style.display = 'block';
-                }
-            }
-            function closeModal() {
-                document.getElementById('detailsModal').style.display = 'none';
-            }
-        </script>
     </head>
     <body>
         <header>
@@ -293,10 +268,6 @@ def dashboard():
                 </table>
             </div>
             {% endfor %}
-        </div>
-        <div id="detailsModal">
-            <div id="modalContent"></div>
-            <button onclick="closeModal()">Cerrar</button>
         </div>
         <footer>
             &copy; 2025 Dashboard de Monitoreo - Todos los derechos reservados.
@@ -355,13 +326,13 @@ def send_alert(ip):
         <html>
         <head>
             <style>
-                body {
+                body {{
                     font-family: Arial, sans-serif;
                     margin: 0;
                     padding: 0;
                     background-color: #f4f4f9;
-                }
-                .container {
+                }}
+                .container {{
                     padding: 20px;
                     background-color: #ffffff;
                     border: 1px solid #ddd;
@@ -370,8 +341,8 @@ def send_alert(ip):
                     max-width: 600px;
                     margin: 60px auto;
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                }
-                .header {
+                }}
+                .header {{
                     background-color: #dc3545;
                     color: white;
                     padding: 10px;
@@ -379,23 +350,23 @@ def send_alert(ip):
                     font-size: 1.5rem;
                     font-weight: bold;
                     border-radius: 8px 8px 0 0;
-                }
-                .body {
+                }}
+                .body {{
                     padding: 20px;
                     text-align: center;
                     color: #333;
-                }
-                .body p {
+                }}
+                .body p {{
                     margin: 0 0 10px;
                     font-size: 1.1rem;
-                }
-                .footer {
+                }}
+                .footer {{
                     text-align: center;
                     padding: 10px;
                     margin-top: 20px;
                     font-size: 0.9rem;
                     color: #aaa;
-                }
+                }}
             </style>
         </head>
         <body>
