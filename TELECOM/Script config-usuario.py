@@ -7,7 +7,7 @@ from loguru import logger
 
 # Diccionario con IPs organizadas por piso o área
 switch_ips_by_area = {
-    "PXX": ["IP","IP"]
+    "P06-IT": ["172.16.0.201", "172.16.0.224"],
     # Agrega más pisos o áreas según sea necesario
 }
 

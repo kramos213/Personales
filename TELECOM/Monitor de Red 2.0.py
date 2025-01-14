@@ -7,25 +7,99 @@ from flask import Flask, render_template_string
 import paramiko
 import logging
 import re
+from itertools import groupby
 
 # Configuración segura
-EMAIL_FROM = os.getenv("SMTP_EMAIL_FROM", "apps@thepanamaclinic.com")
-PASSWORD_SMTP = os.getenv("SMTP_PASSWORD", "Informatica2019")
-EMAIL_TO = os.getenv("ALERT_EMAIL_TO", "kramos@thepanamaclinic.com")
+EMAIL_FROM = os.getenv("SMTP_EMAIL_FROM")
+PASSWORD_SMTP = os.getenv("SMTP_PASSWORD")
+EMAIL_TO = os.getenv("ALERT_EMAIL_TO")
 ssh_credentials = {
-    "username": os.getenv("SSH_USERNAME", "TPC"),
-    "password": os.getenv("SSH_PASSWORD", "Tpc2020*"),
+    "username": os.getenv("SSH_USERNAME","TPC"),
+    "password": os.getenv("SSH_PASSWORD","Us3r@Tpc2024*"),
     "port": int(os.getenv("SSH_PORT", 22))
 }
 
 # Configuración de switches con dispositivos esperados
 switch_ips_by_segment = {
     "PSO": [
-        {"ip": "172.16.0.101", "expected_devices": 1},
-        {"ip": "172.16.0.102", "expected_devices": 2},
-        {"ip": "172.16.0.147", "expected_devices": 1},
-        {"ip": "172.16.0.148", "expected_devices": 1},
-        {"ip": "172.16.0.116", "expected_devices": 1},
+        {"ip": "172.16.0.118", "name": "CCTV", "expected_devices": 1},
+        {"ip": "172.16.0.151", "name": "ALMACEN", "expected_devices": 1},
+        {"ip": "172.16.0.148", "name": "DATA CENTER", "expected_devices": 1},
+        {"ip": "172.16.0.150", "name": "ALMACEN", "expected_devices": 1},
+        {"ip": "172.16.0.102", "name": "DATA CENTER", "expected_devices": 2},
+        {"ip": "172.16.0.116", "name": "DATA CENTER", "expected_devices": 1},
+        {"ip": "172.16.0.101", "name": "DATA CENTER", "expected_devices": 1},
+        {"ip": "172.16.0.147", "name": "DATA CENTER", "expected_devices": 1},
+    ],
+    "PPB": [
+        {"ip": "172.16.0.142", "name": "FARMACIA DE CALLE", "expected_devices": 1},
+        {"ip": "172.16.0.107", "name": "RACK 050", "expected_devices": 1},
+        {"ip": "172.16.0.106", "name": "RACK 050", "expected_devices": 1},
+        {"ip": "172.16.0.105", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.104", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.103", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.143", "name": "RACK PRINCIPAL", "expected_devices": 2}
+    ],
+    "P06": [
+        {"ip": "172.16.0.108", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.109", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.146", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.140", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.201", "name": "RACK IT", "expected_devices": 1},
+        {"ip": "172.16.0.202", "name": "RACK CTC", "expected_devices": 1},
+        {"ip": "172.16.0.224", "name": "RACK IT", "expected_devices": 1}
+    ],
+    "P07": [
+        {"ip": "172.16.0.141", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.115", "name": "RACK UROLOGIA", "expected_devices": 1},
+        {"ip": "172.16.0.112", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.149", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.110", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.111", "name": "RACK RRHH", "expected_devices": 1}
+    ],
+    "P08": [
+        {"ip": "172.16.0.114", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.113", "name": "RACK PRINCIPAL", "expected_devices": 3}
+    ],
+    "P09": [
+        {"ip": "172.16.0.119", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.122", "name": "RACK PRINCIPAL", "expected_devices": 0},
+        {"ip": "172.16.0.121", "name": "RACK PRINCIPAL", "expected_devices": 3},
+        {"ip": "172.16.0.120", "name": "RACK PRINCIPAL", "expected_devices": 1}
+    ],
+    "P10": [
+        {"ip": "172.16.0.124", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.123", "name": "RACK PRINCIPAL", "expected_devices": 4}
+    ],
+    "P11": [
+        {"ip": "172.16.0.125", "name": "RACK PRINCIPAL", "expected_devices": 3},
+        {"ip": "172.16.0.137", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.126", "name": "RACK PRINCIPAL", "expected_devices": 3},
+        {"ip": "172.16.0.139", "name": "RACK PRINCIPAL", "expected_devices": 2}
+    ],
+    "P14": [
+        {"ip": "172.16.0.128", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.127", "name": "RACK PRINCIPAL", "expected_devices": 4}
+    ],
+    "P16": [
+        {"ip": "172.16.0.138", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.130", "name": "RACK PRINCIPAL", "expected_devices": 3},
+        {"ip": "172.16.0.129", "name": "RACK PRINCIPAL", "expected_devices": 3}
+    ],
+    "P17": [
+        {"ip": "172.16.0.136", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.131", "name": "RACK PRINCIPAL", "expected_devices": 4},
+        {"ip": "172.16.0.132", "name": "RACK PRINCIPAL", "expected_devices": 3}
+    ],
+    "P18": [
+        {"ip": "172.16.0.135", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.134", "name": "RACK PRINCIPAL", "expected_devices": 3},
+        {"ip": "172.16.0.133", "name": "RACK PRINCIPAL", "expected_devices": 4}
+    ],
+    
+    "P24": [
+        {"ip": "172.16.0.145", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.200", "name": "RACK PRINCIPAL", "expected_devices": 1}
     ],
     # Agrega más segmentos y switches aquí...
 }
@@ -36,9 +110,11 @@ switch_status = {
         "state": "unknown",
         "stack": [],
         "current_devices": 0,
-        "expected_devices": device["expected_devices"]
+        "expected_devices": device["expected_devices"],
+        "name": device["name"]
     }
-    for segment in switch_ips_by_segment.values() for device in segment
+    for segment in switch_ips_by_segment.values()
+    for device in segment
 }
 
 # Configuración de logging
@@ -107,6 +183,7 @@ def monitor_switches():
                 for device in devices:
                     executor.submit(monitor_device, device["ip"])
         time.sleep(10)  # Intervalo ajustado para reducir la carga
+
 @app.route("/")
 def dashboard():
     """Renderiza el dashboard."""
@@ -114,15 +191,16 @@ def dashboard():
     total_online = sum(1 for s in switch_status.values() if s["state"] == "online")
     total_offline = total_switches - total_online
 
-    return render_template_string("""
-      <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard de Monitoreo</title>
-        <style>
+    return render_template_string(
+        """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta http-equiv="refresh" content="5">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Dashboard de Monitoreo</title>
+            <style>
            body {
                 font-family: 'Roboto', sans-serif;
                 margin: 0;
@@ -142,6 +220,8 @@ def dashboard():
                 --unknown-color: #fb8c00;
                 --total-color: #2196f3;
                 --stack-role-color: #FFD700;
+                --amber-color: #FFA500;
+                
             }
             .light-mode {
                 --bg-color: #f7f9fc;
@@ -209,6 +289,7 @@ def dashboard():
             .card.offline p {
                 color: white;
             }
+            
             .container {
                 display: grid;
                 grid-template-columns: repeat(auto-fill, minmax(650px, 1fr));
@@ -366,69 +447,77 @@ def dashboard():
             }
 
         </style>
-    </head>
-    <body>
-        <header>
-            Dashboard de Monitoreo 2025
-        </header>
-        <div class="stats">
-            <div class="card">
-                <h3>Total Switches</h3>
-                <p>{{ total_switches }}</p>
+        </head>
+        <body>
+            <header>
+                The Panama Clinic - Dashboard de Monitoreo
+            </header>
+            <div class="stats">
+                <div class="card">
+                    <h3>Total Switches</h3>
+                    <p>{{ total_switches }}</p>
+                </div>
+                <div class="card online">
+                    <h3>Online</h3>
+                    <p>{{ total_online }}</p>
+                </div>
+                <div class="card offline">
+                    <h3>Offline</h3>
+                    <p>{{ total_offline }}</p>
+                </div>
             </div>
-            <div class="card online">
-                <h3>Online</h3>
-                <p>{{ total_online }}</p>
+            <div class="container">
+                {% for segment, devices in switch_ips_by_segment.items() %}
+                <div class="segment">
+                    <h2>{{ segment }}</h2>
+                    {% for subsegment_name, subsegment_devices in devices|groupby('name') %}
+                    <h3>{{ subsegment_name }}</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>IP</th>
+                                <th>Estado</th>
+                                <th>Dispositivos Físicos</th>
+                                <th>Stack</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in subsegment_devices %}
+                            <tr>
+                                <td>{{ device.ip }}</td>
+                                <td><span class="status {{ switch_status[device.ip].state }}">{{ switch_status[device.ip].state }}</span></td>
+                                <td>
+                                    {{ switch_status[device.ip].current_devices }} / {{ switch_status[device.ip].expected_devices }}
+                                </td>
+                                <td>
+                                    {% if switch_status[device.ip].stack %}
+                                        {% for stack in switch_status[device.ip].stack %}
+                                        <div>
+                                            <span>{{ stack.MAC }}</span> - 
+                                            <span class="stack-role">{{ stack.Role }}</span>
+                                        </div>
+                                        {% endfor %}
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endfor %}
+                </div>
+                {% endfor %}
             </div>
-            <div class="card offline">
-                <h3>Offline</h3>
-                <p>{{ total_offline }}</p>
-            </div>
-        </div>
-        <div class="container">
-            {% for segment, devices in switch_ips_by_segment.items() %}
-            <div class="segment">
-                <h2>{{ segment }}</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>IP</th>
-                            <th>Estado</th>
-                            <th>Dispositivos Físicos</th>
-                            <th>Stack</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for device in devices %}
-                        <tr>
-                            <td>{{ device.ip }}</td>
-                            <td><span class="status {{ switch_status[device.ip].state }}">{{ switch_status[device.ip].state }}</span></td>
-                            <td>
-                                {{ switch_status[device.ip].current_devices }} / {{ switch_status[device.ip].expected_devices }}
-                            </td>
-                            <td >
-                                {% if switch_status[device.ip].stack %}
-                                    {% for stack in switch_status[device.ip].stack %}
-                                    <div>
-                                        <span>{{ stack.MAC }}</span> - 
-                                        <span class="stack-role">{{ stack.Role }}</span>
-                                    </div>
-                                    {% endfor %}
-                                {% else %}
-                                N/A
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endfor %}
-        </div>
-    </body>
-    </html>
-    """, total_switches=total_switches, total_online=total_online, total_offline=total_offline,
-       switch_ips_by_segment=switch_ips_by_segment, switch_status=switch_status)
+        </body>
+        </html>
+        """,
+        total_switches=total_switches,
+        total_online=total_online,
+        total_offline=total_offline,
+        switch_ips_by_segment=switch_ips_by_segment,
+        switch_status=switch_status
+    )
 
 if __name__ == "__main__":
     threading.Thread(target=monitor_switches, daemon=True).start()
