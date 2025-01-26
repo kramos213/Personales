@@ -92,7 +92,8 @@ switch_ips_by_segment = {
         {"ip": "172.16.0.132", "name": "RACK PRINCIPAL", "expected_devices": 3}
     ],
     "P18": [
-        {"ip": "172.16.0.135", "name": "RACK PRINCIPAL", "expected_devices": 2},
+        {"ip": "172.16.0.135", "name": "RACK PRINCIPAL", "expected_devices": 1},
+        {"ip": "172.16.0.149", "name": "RACK PRINCIPAL", "expected_devices": 1},
         {"ip": "172.16.0.134", "name": "RACK PRINCIPAL", "expected_devices": 3},
         {"ip": "172.16.0.133", "name": "RACK PRINCIPAL", "expected_devices": 4}
     ],
