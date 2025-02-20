@@ -110,8 +110,8 @@ if __name__ == "__main__":
             new_password = input(f"Ingrese la nueva contraseña para '{username}': ")
 
         # Credenciales de SSH
-        ssh_username = 'EHERRERA'
-        ssh_password = 'Y6XfV54@'
+        ssh_username = 'TPC'
+        ssh_password = 'Us3r@Tpc2024*'
 
         for area, ips in switch_ips_by_area.items():
             for ip in ips:
