@@ -1,0 +1,479 @@
+{
+  "Dhcp4": {
+
+    "interfaces-config": {
+      "interfaces": ["*"]
+    },
+    
+    "control-sockets": [
+      {
+        "socket-type": "https",
+        "socket-address": "10.1.1.210",
+        "socket-port": 8081,
+        "http-headers": [
+            {
+              "name": "Strict-Transport-Security",
+              "value": "max-age=31536000"
+            }
+          ],
+          "trust-anchor": "/path/to/the/ca-cert.pem",
+          "cert-file": "/path/to/the/agent-cert.pem",
+          "key-file": "/path/to/the/agent-key.pem",
+          "cert-required": true,
+          "authentication": {
+              "type": "basic",
+              "realm": "kea-dhcpv4-server",
+              "clients": [
+              {
+                  "user": "admin",
+                  "password": "P4$$w0rd2025"
+               
+              }
+            ] 
+          }
+      }
+    ],
+    "lease-database": {
+      "type": "memfile",
+      "persist": true,
+      "name": "/var/lib/kea/kea-leases4.csv"
+    },
+
+    "expired-leases-processing": {
+        "reclaim-timer-wait-time": 30,
+        "flush-reclaimed-timer-wait-time": 60,
+        "hold-reclaimed-time": 28800,
+        "max-reclaim-leases": 200,
+        "max-reclaim-time": 500,
+        "unwarned-reclaim-cycles": 10
+    },
+
+    "valid-lifetime": 28800,
+    "renew-timer": 14400,
+    "rebind-timer": 21600,
+
+    "option-data": [
+      {
+        "name": "domain-name",
+        "data": "thepanamaclinic.local"
+      },
+      {
+        "name": "domain-name-servers",
+        "data": "10.1.1.11,10.1.4.2,8.8.8.8"
+      }
+    ],
+
+    "subnet4": [
+      {
+        "id": 1,
+        "subnet": "10.1.1.0/24",
+        "comment": "Subred de SERVIDORES",
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.1.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.33.0/24",
+        "comment": "Subred de PRUEBA para validación del servicio DHCP",
+        "pools": [
+          {
+            "pool": "10.1.33.100 - 10.1.33.200"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.33.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.28.0/23",
+        "comment": "DEVICE TPC",
+        "pools": [
+          {
+            "pool": "10.1.28.15 - 10.1.29.254"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.28.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.254.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.7.0/24",
+        "comment": "ADMINISTRACIÓN IT",
+        "pools": [
+          {
+            "pool": "10.1.7.15 - 10.1.7.40"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.7.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.60.0/24",
+        "comment": "PC TPC CORP - PSO",
+        "pools": [
+          {
+            "pool": "10.1.60.10 - 10.1.60.200"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.60.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.230.0/24",
+        "comment": "WIFI TPC CORP - PSO",
+        "pools": [
+          {
+            "pool": "10.1.230.10 -10.1.230.100"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.230.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.115.0/24",
+        "comment": "PC TPC CORP - PPB",
+        "pools": [
+          {
+            "pool": "10.1.115.10 - 10.1.115.100"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.115.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.215.0/24",
+        "comment": "WIFI TPC CORP - PPB",
+        "pools": [
+          {
+            "pool": "10.1.215.10 - 10.1.215.100"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.215.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.116.0/24",
+        "comment": "PC TPC CORP - P06",
+        "pools": [
+          {
+            "pool": "10.1.116.10 - 10.1.116.100"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.116.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+        "subnet": "10.1.206.0/24",
+        "comment": "WIFI TPC CORP - P06",
+        "pools": [
+          {
+            "pool": "10.1.206.10 - 10.1.206.100"
+          }
+        ],
+        "option-data": [
+          {
+            "name": "routers",
+            "data": "10.1.206.1"
+          },
+          {
+            "name": "subnet-mask",
+            "data": "255.255.255.0"
+          }
+        ]
+      },
+
+      {
+          "subnet": "10.1.8.0/24",
+          "comment": "RELOJ IT",
+          "pools": [
+            {
+              "pool": "10.1.8.2 - 10.1.8.100"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "10.1.8.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "10.1.24.0/24",
+          "comment": "CONTACT CENTER",
+          "pools": [
+            {
+              "pool": "10.1.24.50 - 10.1.24.70"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "10.1.24.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ],
+          "reservations": [
+            {
+              "hw-address": "00:50:56:8f:00:01",
+              "ip-address": "10.1.24.10",
+              "hostname": "CC-01"
+            },
+            {
+              "hw-address": "00:50:56:8f:00:02",
+              "ip-address": "10.1.24.11",
+              "hostname": "CC-02"
+            },
+            {
+              "hw-address": "00:50:56:8f:00:03",
+              "ip-address": "10.1.24.12",
+              "hostname": "CC-03"
+            },
+            {
+              "hw-address": "00:50:56:8f:00:04",
+              "ip-address": "10.1.24.13",
+              "hostname": "CC-04"
+            }
+          ]
+        },
+
+        {
+          "subnet": "10.1.39.0/24",
+          "comment": "MARKETING",
+          "pools": [
+            {
+              "pool": "10.1.39.10 - 10.1.39.25"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "10.1.39.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "10.1.56.0/24",
+          "comment": "TELEMETRIA",
+          "pools": [
+            {
+              "pool": "10.1.56.5 - 10.1.56.30"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "10.1.56.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "10.1.62.0/24",
+          "comment": "RX-WIFI TPC",
+          "pools": [
+            {
+              "pool": "10.1.62.165 - 10.1.62.185"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "10.1.62.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "10.1.64.0/24",
+          "comment": "MEDVISION TPC",
+          "pools": [
+            {
+              "pool": "10.1.64.2 - 10.1.64.10"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "10.1.64.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "172.16.2.0/24",
+          "comment": "RUCKUS ONE",
+          "pools": [
+            {
+              "pool": "172.16.2.5 - 172.16.2.200"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "172.16.2.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "172.16.70.0/24",
+          "comment": "PC FARMACIA EXTERNA - PPB",
+          "pools": [
+            {
+              "pool": "172.16.70.10 - 172.16.70.50"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "172.16.70.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        },
+
+        {
+          "subnet": "172.16.71.0/24",
+          "comment": "WIFI FARMACIA EXTERNA - PPB",
+          "pools": [
+            {
+              "pool": "172.16.71.5 - 172.16.71.50"
+            }
+          ],
+          "option-data": [
+            {
+              "name": "routers",
+              "data": "172.16.71.1"
+            },
+            {
+              "name": "subnet-mask",
+              "data": "255.255.255.0"
+            }
+          ]
+        }
+
+      ],
+
+    "loggers": [
+      {
+        "name": "kea-dhcp4",
+        "output_options": [
+          {
+            "output": "/var/log/kea-dhcp4.log"
+          }
+        ],
+        "severity": "INFO"
+      }
+    ]
+  }
+}
