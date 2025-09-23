@@ -1,4 +1,11 @@
 {
     "editor.cursorStyle": "line-thin",
-    "editor.cursorBlinking": "smooth"
+    "editor.cursorBlinking": "smooth",
+    "python-envs.pythonProjects": [
+        {
+            "path": "UTP/TOP-II",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
+        }
+    ]
 }
