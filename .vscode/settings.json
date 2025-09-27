@@ -6,6 +6,11 @@
             "path": "UTP/TOP-II",
             "envManager": "ms-python.python:venv",
             "packageManager": "ms-python.python:pip"
+        },
+        {
+            "path": "UTP/TOP-II/.ipynb_checkpoints",
+            "envManager": "ms-python.python:venv",
+            "packageManager": "ms-python.python:pip"
         }
     ]
 }
