@@ -1,0 +1,537 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "id": "bfeff595",
+      "metadata": {
+        "id": "bfeff595"
+      },
+      "source": [
+        "\n",
+        "# Actividad Individual No. 2\n",
+        "\n",
+        "Fundamentos de Machine Learning e IA Aplicado a Redes\n",
+        "\n",
+        "**Objetivo:** recorrer el **ciclo de vida completo** de un modelo de ML aplicado a **ciberseguridad de redes**, con ejemplos prácticos de:\n",
+        "\n",
+        "- Clasificación de tráfico (multi-clase)\n",
+        "- Detección de intrusiones / IDS (binario)\n",
+        "- Métricas y validación\n",
+        "- Guardado y carga del modelo (deploy)\n",
+        "- Monitoreo básico / deriva (drift) con nuevas muestras\n",
+        "\n",
+        "> **Nota:** El dataset se genera de forma sintética pero las *caracterisitcas* simulan flujos de red comunes: bytes por flujo, duración, paquetes, flags, ratios, etc.\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "7e4b38e3",
+      "metadata": {
+        "id": "7e4b38e3"
+      },
+      "source": [
+        "\n",
+        "## 1) Ciclo de vida de un modelo en ciberseguridad\n",
+        "\n",
+        "1. **Definición del problema**: ¿Clasificar tráfico o detectar intrusiones?\n",
+        "2. **Datos**: recolección, limpieza, ingeniería de *features* (ej. estadísticos por flujo).\n",
+        "3. **Partición**: entrenamiento/validación/prueba.\n",
+        "4. **Entrenamiento**: selección de algoritmo y *tuning* simple.\n",
+        "5. **Evaluación**: métricas (Precision, Recall, F1, ROC-AUC, matriz de confusión).\n",
+        "6. **Despliegue**: guardar/cargar modelo; predicciones en línea por lote.\n",
+        "7. **Monitoreo**: detección de deriva (drift) y *retraining* cuando sea necesario.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "b055d9e1",
+      "metadata": {
+        "id": "b055d9e1"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Imports\n",
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "from sklearn.datasets import make_classification\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.preprocessing import StandardScaler\n",
+        "from sklearn.pipeline import Pipeline\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, roc_curve\n",
+        "import matplotlib.pyplot as plt\n",
+        "import joblib\n",
+        "\n",
+        "# Config reproducibilidad\n",
+        "rng = np.random.default_rng(42)\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "915f7ed1",
+      "metadata": {
+        "id": "915f7ed1"
+      },
+      "source": [
+        "\n",
+        "## 2) Generación de datos sintéticos estilo *network flows*\n",
+        "\n",
+        "Se crean variables que imitan estadísticas de flujos:\n",
+        "- `duration`, `bytes_fwd`, `bytes_bwd`, `pkts_fwd`, `pkts_bwd`\n",
+        "- `pkt_len_mean`, `pkt_len_std`, `fwd_bwd_ratio`, `psh_flag_cnt`, `urg_flag_cnt`\n",
+        "\n",
+        "Realizan dos tareas:\n",
+        "- **Detección de intrusiones (binario)**: *benigno* vs *intrusión*.\n",
+        "- **Clasificación de tráfico (multiclase)**: *web*, *dns*, *ssh*, *malware*.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "3f5b7c4d",
+      "metadata": {
+        "id": "3f5b7c4d"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Función auxiliar para crear caracterisicas con estructura de \"flujo de red\"\n",
+        "def synth_flows(n_samples, seed=0):\n",
+        "    rng = np.random.default_rng(seed)\n",
+        "    duration = rng.gamma(2.0, 0.8, n_samples)  # s\n",
+        "    bytes_fwd = rng.lognormal(8, 0.8, n_samples)\n",
+        "    bytes_bwd = rng.lognormal(7.5, 0.9, n_samples)\n",
+        "    pkts_fwd = (bytes_fwd / rng.lognormal(5.5, 0.6, n_samples)).astype(int).clip(1, None)\n",
+        "    pkts_bwd = (bytes_bwd / rng.lognormal(5.3, 0.6, n_samples)).astype(int).clip(1, None)\n",
+        "    pkt_len_mean = (bytes_fwd + bytes_bwd) / (pkts_fwd + pkts_bwd)\n",
+        "    pkt_len_std = pkt_len_mean * rng.uniform(0.05, 0.35, n_samples)\n",
+        "    fwd_bwd_ratio = (bytes_fwd + 1) / (bytes_bwd + 1)\n",
+        "    psh_flag_cnt = rng.poisson(0.2, n_samples)\n",
+        "    urg_flag_cnt = rng.poisson(0.05, n_samples)\n",
+        "    X = np.column_stack([\n",
+        "        duration, bytes_fwd, bytes_bwd, pkts_fwd, pkts_bwd,\n",
+        "        pkt_len_mean, pkt_len_std, fwd_bwd_ratio, psh_flag_cnt, urg_flag_cnt\n",
+        "    ])\n",
+        "    cols = [\"duration\",\"bytes_fwd\",\"bytes_bwd\",\"pkts_fwd\",\"pkts_bwd\",\n",
+        "            \"pkt_len_mean\",\"pkt_len_std\",\"fwd_bwd_ratio\",\"psh_flag_cnt\",\"urg_flag_cnt\"]\n",
+        "    return pd.DataFrame(X, columns=cols)\n",
+        "\n",
+        "# Conjuntos por clase de tráfico\n",
+        "n = 2500\n",
+        "web = synth_flows(n, seed=1)\n",
+        "dns = synth_flows(n, seed=2)\n",
+        "ssh = synth_flows(n, seed=3)\n",
+        "malware = synth_flows(n, seed=4)\n",
+        "\n",
+        "# Ajustes característicos por clase (solapamiento realista)\n",
+        "web[\"bytes_fwd\"] *= 1.2; web[\"pkts_fwd\"] *= 1.1\n",
+        "dns[\"duration\"] *= 0.4; dns[\"pkt_len_mean\"] *= 0.6; dns[\"pkts_fwd\"] *= 1.4\n",
+        "ssh[\"duration\"] *= 1.5; ssh[\"fwd_bwd_ratio\"] *= 1.3\n",
+        "malware[\"bytes_bwd\"] *= 1.6; malware[\"psh_flag_cnt\"] += 1; malware[\"urg_flag_cnt\"] += 1\n",
+        "\n",
+        "# Etiquetas multi-clase\n",
+        "web[\"y_mc\"] = 0; dns[\"y_mc\"] = 1; ssh[\"y_mc\"] = 2; malware[\"y_mc\"] = 3\n",
+        "df_mc = pd.concat([web, dns, ssh, malware], ignore_index=True)\n",
+        "\n",
+        "# Etiquetas binarias para IDS: 0 = benigno (web/dns/ssh), 1 = intrusión (malware)\n",
+        "df_bin = df_mc.copy()\n",
+        "df_bin[\"y_bin\"] = (df_bin[\"y_mc\"] == 3).astype(int)\n",
+        "\n",
+        "df_mc.shape, df_bin.shape\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "b560cca2",
+      "metadata": {
+        "id": "b560cca2"
+      },
+      "source": [
+        "\n",
+        "## 3) Entrenamiento y evaluación\n",
+        "\n",
+        "Fase de entrenar los dos modelos:\n",
+        "- **Clasificación de tráfico (multiclase)** → `RandomForestClassifier`\n",
+        "- **Detección de intrusiones (binario)** → `LogisticRegression` dentro de `Pipeline` con `StandardScaler`\n",
+        "\n",
+        "Usamos `train_test_split` y reportamos métricas.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "473ff5c9",
+      "metadata": {
+        "id": "473ff5c9"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Columnas de features\n",
+        "features = [\"duration\",\"bytes_fwd\",\"bytes_bwd\",\"pkts_fwd\",\"pkts_bwd\",\n",
+        "            \"pkt_len_mean\",\"pkt_len_std\",\"fwd_bwd_ratio\",\"psh_flag_cnt\",\"urg_flag_cnt\"]\n",
+        "\n",
+        "# ---- Multiclase (tráfico) ----\n",
+        "X_mc = df_mc[features].values\n",
+        "y_mc = df_mc[\"y_mc\"].values\n",
+        "Xtr_mc, Xte_mc, ytr_mc, yte_mc = train_test_split(X_mc, y_mc, test_size=0.25, random_state=123, stratify=y_mc)\n",
+        "\n",
+        "rf = RandomForestClassifier(n_estimators=160, random_state=123, n_jobs=-1)\n",
+        "rf.fit(Xtr_mc, ytr_mc)\n",
+        "pred_mc = rf.predict(Xte_mc)\n",
+        "\n",
+        "print(\"== Clasificación de tráfico (multiclase) ==\")\n",
+        "print(classification_report(yte_mc, pred_mc, digits=4))\n",
+        "\n",
+        "# ---- Binario (IDS) ----\n",
+        "X_bin = df_bin[features].values\n",
+        "y_bin = df_bin[\"y_bin\"].values\n",
+        "Xtr_b, Xte_b, ytr_b, yte_b = train_test_split(X_bin, y_bin, test_size=0.25, random_state=123, stratify=y_bin)\n",
+        "\n",
+        "pipe = Pipeline([(\"scaler\", StandardScaler()),\n",
+        "                 (\"clf\", LogisticRegression(max_iter=1000, n_jobs=None))])\n",
+        "pipe.fit(Xtr_b, ytr_b)\n",
+        "pred_b = pipe.predict(Xte_b)\n",
+        "proba_b = pipe.predict_proba(Xte_b)[:,1]\n",
+        "\n",
+        "print(\"\\n== Detección de intrusiones (binario) ==\")\n",
+        "print(classification_report(yte_b, pred_b, digits=4))\n",
+        "print(\"ROC-AUC:\", round(roc_auc_score(yte_b, proba_b), 4))\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "725766b2",
+      "metadata": {
+        "id": "725766b2"
+      },
+      "source": [
+        "\n",
+        "### 3.1) Matrices de confusión\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "d3ad0b50",
+      "metadata": {
+        "id": "d3ad0b50"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Matriz de confusión multiclase\n",
+        "cm_mc = confusion_matrix(yte_mc, pred_mc)\n",
+        "plt.figure()\n",
+        "plt.imshow(cm_mc, interpolation='nearest')\n",
+        "plt.title(\"Matriz de confusión - Tráfico (multiclase)\")\n",
+        "plt.xlabel(\"Predicción\")\n",
+        "plt.ylabel(\"Real\")\n",
+        "plt.colorbar()\n",
+        "plt.show()\n",
+        "\n",
+        "# Matriz de confusión binaria\n",
+        "cm_b = confusion_matrix(yte_b, pred_b)\n",
+        "plt.figure()\n",
+        "plt.imshow(cm_b, interpolation='nearest')\n",
+        "plt.title(\"Matriz de confusión - IDS (binario)\")\n",
+        "plt.xlabel(\"Predicción\")\n",
+        "plt.ylabel(\"Real\")\n",
+        "plt.colorbar()\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "c6697e4c",
+      "metadata": {
+        "id": "c6697e4c"
+      },
+      "source": [
+        "\n",
+        "### 3.2) Curva ROC (binario)\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "70878acd",
+      "metadata": {
+        "id": "70878acd"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "fpr, tpr, thr = roc_curve(yte_b, proba_b)\n",
+        "plt.figure()\n",
+        "plt.plot(fpr, tpr, label=\"ROC (IDS)\")\n",
+        "plt.plot([0,1], [0,1], linestyle='--')\n",
+        "plt.title(\"ROC - IDS (binario)\")\n",
+        "plt.xlabel(\"FPR\")\n",
+        "plt.ylabel(\"TPR\")\n",
+        "plt.legend()\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "43c8d4d2",
+      "metadata": {
+        "id": "43c8d4d2"
+      },
+      "source": [
+        "\n",
+        "## 4) Despliegue básico: guardar y cargar el modelo\n",
+        "\n",
+        "Guardamos el **modelo IDS** entrenado (`Pipeline`) y mostramos cómo usarlo para predecir sobre nuevas observaciones.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "b6bd5e3f",
+      "metadata": {
+        "id": "b6bd5e3f"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Guardar\n",
+        "joblib.dump(pipe, \"/content/ids_pipeline.joblib\")\n",
+        "\n",
+        "# Cargar\n",
+        "ids_loaded = joblib.load(\"/content/ids_pipeline.joblib\")\n",
+        "\n",
+        "# Predicción ejemplo (tres flujos: 2 benignos, 1 sospechoso/malware)\n",
+        "X_new = np.array([\n",
+        "    [0.6,  5e3, 3e3, 10, 8,  450,  80, 1.2, 0, 0],\n",
+        "    [0.3,  2e4, 1.8e4, 40, 36, 950, 150, 1.1, 0, 0],\n",
+        "    [1.8,  1.5e4, 5.0e4, 18, 55, 1200, 240, 0.3, 2, 1]  # más parecido a malware\n",
+        "], dtype=float)\n",
+        "proba_new = ids_loaded.predict_proba(X_new)[:,1]\n",
+        "pred_new = ids_loaded.predict(X_new)\n",
+        "\n",
+        "pd.DataFrame({\"prob_intrusion\": proba_new, \"pred\": pred_new})\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "cdede6c3",
+      "metadata": {
+        "id": "cdede6c3"
+      },
+      "source": [
+        "\n",
+        "## 5) Monitoreo básico (drift)\n",
+        "\n",
+        "Simulamos la llegada de nuevos flujos y medimos si la distribución de un *feature* clave cambia respecto al conjunto de entrenamiento (p. ej., KS-test simple). Si el cambio es grande, **posible deriva** revisar y reentrenar.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "e42abe29",
+      "metadata": {
+        "id": "e42abe29"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "from scipy.stats import ks_2samp\n",
+        "\n",
+        "# Usamos el feature 'bytes_bwd' como ejemplo de monitoreo\n",
+        "baseline = Xtr_b[:, 2]  # bytes_bwd de entrenamiento\n",
+        "new_batch = synth_flows(800, seed=123)[\"bytes_bwd\"].values * 1.4  # simulamos cambio\n",
+        "\n",
+        "stat, p = ks_2samp(baseline, new_batch)\n",
+        "print(\"KS stat:\", round(stat, 4), \"p-value:\", round(p, 6))\n",
+        "\n",
+        "if p < 0.01:\n",
+        "    print(\"Posible DRIFT detectado en 'bytes_bwd' (p<0.01). Recomendar revisión/reentrenamiento.\")\n",
+        "else:\n",
+        "    print(\"Sin evidencia fuerte de drift en 'bytes_bwd'.\")\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "58f4a4dc",
+      "metadata": {
+        "id": "58f4a4dc"
+      },
+      "source": [
+        "\n",
+        "## 6) IDS/NIDS Inteligente (híbrido regla y ML)\n",
+        "\n",
+        "En producción generalmente se combina:\n",
+        "- **Reglas** (ej. *Snort*) para firmas conocidas.\n",
+        "- **ML** para detectar patrones anómalos/variantes desconocidas.\n",
+        "\n",
+        "Ejemplo conceptual: si `psh_flag_cnt` o `urg_flag_cnt` superan umbral se marcar como **sospechoso** y además pasar por el modelo ML para obtener una probabilidad.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "13cc055a",
+      "metadata": {
+        "id": "13cc055a"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "def hybrid_ids_predict(flow_row, model, p_threshold=0.6):\n",
+        "    # Regla simple\n",
+        "    rule_alert = (flow_row[\"psh_flag_cnt\"] > 2) or (flow_row[\"urg_flag_cnt\"] > 0)\n",
+        "    X = flow_row[[\"duration\",\"bytes_fwd\",\"bytes_bwd\",\"pkts_fwd\",\"pkts_bwd\",\n",
+        "                  \"pkt_len_mean\",\"pkt_len_std\",\"fwd_bwd_ratio\",\"psh_flag_cnt\",\"urg_flag_cnt\"]].to_numpy().reshape(1, -1)\n",
+        "    p_ml = model.predict_proba(X)[0,1]\n",
+        "    final_alert = rule_alert or (p_ml >= p_threshold)\n",
+        "    return {\"rule_alert\": rule_alert, \"p_ml\": float(p_ml), \"final_alert\": final_alert}\n",
+        "\n",
+        "sample = df_bin.sample(5, random_state=7)\n",
+        "hybrid_results = sample.apply(lambda r: hybrid_ids_predict(r, ids_loaded), axis=1)\n",
+        "pd.DataFrame(list(hybrid_results))\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "f5b63ce4",
+      "metadata": {
+        "id": "f5b63ce4"
+      },
+      "source": [
+        "\n",
+        "# **6) Persistencia del modelo **\n",
+        "\n",
+        "En Google Colab la ruta `/mnt/data` no existe por defecto. Para evitar errores de tipo `FileNotFoundError`,\n",
+        "guardaremos el modelo en **`/content`** (persistente durante la sesión) y, opcionalmente, en **Google Drive**.\n",
+        "\n",
+        "- Guardado local recomendado: `/content/ids_pipeline.joblib`  \n",
+        "- Guardado en Drive (opcional): `/content/drive/MyDrive/ids_pipeline.joblib`\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "2ef6e796",
+      "metadata": {
+        "id": "2ef6e796"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# FASE 6 — Utilidades de guardado/carga\n",
+        "import os, joblib\n",
+        "from typing import Optional\n",
+        "\n",
+        "def persist_model(model, local_path=\"/content/ids_pipeline.joblib\", drive_path: Optional[str]=None):\n",
+        "    if model is None:\n",
+        "        raise ValueError(\"El modelo a guardar es None. Entrene su pipeline (por ejemplo variable 'pipe') antes.\")\n",
+        "    # Guardado local en /content\n",
+        "    joblib.dump(model, local_path)\n",
+        "    size_kb = os.path.getsize(local_path)/1024\n",
+        "    print(f\" Modelo guardado en {local_path} ({size_kb:.1f} KB)\")\n",
+        "    # Copia en Drive (opcional)\n",
+        "    if drive_path:\n",
+        "        os.makedirs(os.path.dirname(drive_path), exist_ok=True)\n",
+        "        joblib.dump(model, drive_path)\n",
+        "        print(f\" Copia guardada en Google Drive: {drive_path}\")\n",
+        "\n",
+        "def load_model(path=\"/content/ids_pipeline.joblib\"):\n",
+        "    if not os.path.exists(path):\n",
+        "        raise FileNotFoundError(f\"No existe el archivo: {path}\")\n",
+        "    mdl = joblib.load(path)\n",
+        "    print(\" Modelo cargado correctamente:\", type(mdl))\n",
+        "    return mdl\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "b88e4b89",
+      "metadata": {
+        "id": "b88e4b89"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# FASE 6 — Guardado local en /content\n",
+        "# Asegúrese de haber entrenado su modelo/pipeline (por ejemplo variable 'pipe') en fases anteriores.\n",
+        "try:\n",
+        "    persist_model(pipe, local_path=\"/content/ids_pipeline.joblib\")\n",
+        "except NameError:\n",
+        "    raise NameError(\"Variable 'pipe' no existe. Ejecute la fase de entrenamiento antes de esta celda.\")\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "b4d456da",
+      "metadata": {
+        "id": "b4d456da"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# (Opcional) Descargar el modelo al equipo\n",
+        "from google.colab import files\n",
+        "files.download(\"/content/ids_pipeline.joblib\")\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "#*** 8) Conteste las siguientes Preguntas de Análisis ***\n",
+        "1. En la etapa de preprocesamiento de datos, ¿qué técnicas se aplicaron para normalizar o transformar las características de red y por qué son necesarias antes de entrenar un modelo de Machine Learning?\n",
+        "\n",
+        "2. El notebook entrena varios modelos supervisados (ej. Regresión Logística, Random Forest, SVM). ¿Cuál obtuvo el mejor desempeño según las métricas evaluadas (accuracy, F1-Score, ROC-AUC) y por qué estas métricas son más útiles que la simple exactitud en un IDS?\n",
+        "\n",
+        "3. Explique cómo se relaciona la clasificación de tráfico de red con la detección de intrusiones. ¿Puede haber un flujo clasificado como “legítimo” que luego resulte malicioso? Dé un ejemplo práctico basado en el la actividad.\n",
+        "\n",
+        "4. En el ciclo de vida de un modelo, ¿qué riesgos pueden surgir si el dataset está desbalanceado (más tráfico benigno que malicioso)? ¿Qué estrategias aplicadas en el notebook ayudan a mitigar este problema?\n",
+        "\n",
+        "5. Después de generar el modelo en Colab, ¿cómo se podría integrar con un sistema en tiempo real como Snort? Mencione al menos dos formas de conexión entre el modelo entrenado y el flujo de alertas de Snort.\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "ZgRkYrB2_gCF"
+      },
+      "id": "ZgRkYrB2_gCF"
+    },
+    {
+      "cell_type": "markdown",
+      "id": "5b3fb0df",
+      "metadata": {
+        "id": "5b3fb0df"
+      },
+      "source": [
+        "---"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Entregable\n",
+        "## Entregar el notebook con los resultados y las respuestas a las preguntas de  análsis."
+      ],
+      "metadata": {
+        "id": "GhHe17iwB2p9"
+      },
+      "id": "GhHe17iwB2p9"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "name": "python3"
+    },
+    "colab": {
+      "provenance": []
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

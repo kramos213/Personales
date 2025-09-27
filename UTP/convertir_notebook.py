@@ -21,9 +21,9 @@ def json_a_notebook(json_file, output_file):
 # Ejemplo de uso
 if __name__ == "__main__":
     # Archivo JSON de entrada (con la estructura del notebook)
-    archivo_json = "/Users/kevinramos/Documents/Git File/Personales/UTP/TOP-II.1/JSON/Actividad-01.json"
+    archivo_json = "/Users/kevinramos/Documents/Git File/Personales/UTP/TOP-II.1/JSON/Actividad-02.json"
     
     # Archivo Jupyter de salida
-    archivo_ipynb = "/Users/kevinramos/Documents/Git File/Personales/UTP/TOP-II.1/IPYNB/Actividad-01.ipynb"
+    archivo_ipynb = "/Users/kevinramos/Documents/Git File/Personales/UTP/TOP-II.1/IPYNB/Actividad-02.ipynb"
     
     json_a_notebook(archivo_json, archivo_ipynb)
