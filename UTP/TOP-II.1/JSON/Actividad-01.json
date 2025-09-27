@@ -1,0 +1,536 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "id": "cc52dd0a",
+      "metadata": {
+        "id": "cc52dd0a"
+      },
+      "source": [
+        "\n",
+        "# **Actividad Individual No. 1**  \n",
+        "## **TÍTULO DE LA EXPERIENCIA:**  \n",
+        "Machine Learning e IA aplicado a las redes\n",
+        "\n",
+        "### **B. TEMAS**  \n",
+        "Algoritmos supervisados y no supervisados\n",
+        "\n",
+        "### **C. OBJETIVO(S)**  \n",
+        "- Diferenciar los paradigmas de aprendizaje supervisado y *no supervisado* en el contexto de redes.  \n",
+        "- Entrenar y evaluar modelos supervisados (Regresión Logística, SVM, Random Forest) para clasificación binaria.  \n",
+        "- Aplicar algoritmos no supervisados (K-Means, DBSCAN, PCA, GMM) para descubrir estructura y detectar anomalías texto en negrita sin etiquetas.  \n",
+        "- Interpretar métricas (Accuracy, Precision, Recall, F1, ROC-AUC) y visualizar resultados.  \n",
+        "- Formular conclusiones y responder preguntas de Análisis sobre decisiones de modelado y resultados.\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "e75ecd63",
+      "metadata": {
+        "id": "e75ecd63"
+      },
+      "source": [
+        "\n",
+        "---\n",
+        "## **D. RECURSOS**\n",
+        "- Python 3.x, scikit-learn, NumPy, pandas, matplotlib.  \n",
+        "- Dataset sintético estilo red generado en este cuaderno (no requiere descarga).\n",
+        "\n",
+        "## **E. INSTRUCCIONES GENERALES**\n",
+        "1. Ejecuta cada celda en orden.  \n",
+        "2. Completa las preguntas de Análisis en celdas  (agrega más si es necesario).  \n",
+        "3. Guarda el cuaderno con tus respuestas y entrégalo según las indicaciones del curso.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "256456da",
+      "metadata": {
+        "id": "256456da"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# === Importaciones base ===\n",
+        "import numpy as np\n",
+        "import pandas as pd\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.preprocessing import StandardScaler\n",
+        "from sklearn.pipeline import Pipeline\n",
+        "\n",
+        "# Supervisado\n",
+        "from sklearn.linear_model import LogisticRegression\n",
+        "from sklearn.svm import SVC\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.metrics import (\n",
+        "    accuracy_score, precision_score, recall_score, f1_score,\n",
+        "    roc_auc_score, confusion_matrix, RocCurveDisplay\n",
+        ")\n",
+        "\n",
+        "# No supervisado\n",
+        "from sklearn.cluster import KMeans, DBSCAN\n",
+        "from sklearn.decomposition import PCA\n",
+        "from sklearn.mixture import GaussianMixture\n",
+        "\n",
+        "rng = np.random.default_rng(42)\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "29d6090a",
+      "metadata": {
+        "id": "29d6090a"
+      },
+      "source": [
+        "\n",
+        "---\n",
+        "# **Parte I — Aprendizaje Supervisado**  \n",
+        "\n",
+        "### 1) Generación de datos estilo red (binario: normal vs DoS)\n",
+        "- Clase 0 (normal): tasas de paquetes moderadas, bytes/paquete medios, duraciones estables.  \n",
+        "- Clase 1 (DoS): muchos paquetes/segundo, paquetes más pequeños, duraciones cortas, ráfagas de conexiones.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "2595b5c5",
+      "metadata": {
+        "id": "2595b5c5"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Generación de datos\n",
+        "n_normal = 1200\n",
+        "n_dos    = 800\n",
+        "\n",
+        "# Normal\n",
+        "pkts_n   = rng.normal(60, 8, n_normal)\n",
+        "bytes_n  = rng.normal(700, 90, n_normal)\n",
+        "dur_n    = rng.normal(30, 6, n_normal)\n",
+        "conns_n  = rng.normal(10, 2, n_normal)\n",
+        "\n",
+        "# DoS\n",
+        "pkts_a   = rng.normal(200, 30, n_dos)\n",
+        "bytes_a  = rng.normal(200, 40, n_dos)\n",
+        "dur_a    = rng.normal(5, 2, n_dos)\n",
+        "conns_a  = rng.normal(40, 10, n_dos)\n",
+        "\n",
+        "X = np.vstack([\n",
+        "    np.c_[pkts_n, bytes_n, dur_n, conns_n],\n",
+        "    np.c_[pkts_a, bytes_a, dur_a, conns_a]\n",
+        "])\n",
+        "y = np.array([0]*n_normal + [1]*n_dos)\n",
+        "\n",
+        "cols = [\"pkts_per_sec\",\"bytes_per_pkt\",\"duration\",\"conn_rate\"]\n",
+        "df = pd.DataFrame(X, columns=cols)\n",
+        "df[\"label\"] = y\n",
+        "df.head()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "1e406baf",
+      "metadata": {
+        "id": "1e406baf"
+      },
+      "source": [
+        "\n",
+        "### 2) División entrenamiento / prueba\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "7b46f5c5",
+      "metadata": {
+        "id": "7b46f5c5"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "X = df[cols].values\n",
+        "y = df[\"label\"].values\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(\n",
+        "    X, y, test_size=0.25, random_state=42, stratify=y\n",
+        ")\n",
+        "X_train.shape, X_test.shape\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "7e61ec82",
+      "metadata": {
+        "id": "7e61ec82"
+      },
+      "source": [
+        "\n",
+        "### 3) Entrenamiento y comparación de modelos  \n",
+        "Modelos: **Regresión Logística**, **SVM (lineal)** y **Random Forest**.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "74b5a37b",
+      "metadata": {
+        "id": "74b5a37b"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "def eval_clf(y_true, y_pred, y_score=None):\n",
+        "    m = {\n",
+        "        \"accuracy\": accuracy_score(y_true, y_pred),\n",
+        "        \"precision\": precision_score(y_true, y_pred, zero_division=0),\n",
+        "        \"recall\": recall_score(y_true, y_pred, zero_division=0),\n",
+        "        \"f1\": f1_score(y_true, y_pred, zero_division=0)\n",
+        "    }\n",
+        "    if y_score is not None:\n",
+        "        try:\n",
+        "            m[\"roc_auc\"] = roc_auc_score(y_true, y_score)\n",
+        "        except Exception:\n",
+        "            m[\"roc_auc\"] = np.nan\n",
+        "    return m\n",
+        "\n",
+        "models = {\n",
+        "    \"LogisticRegression\": Pipeline([\n",
+        "        (\"scaler\", StandardScaler()),\n",
+        "        (\"clf\", LogisticRegression(max_iter=300))\n",
+        "    ]),\n",
+        "    \"LinearSVM\": Pipeline([\n",
+        "        (\"scaler\", StandardScaler()),\n",
+        "        (\"clf\", SVC(kernel=\"linear\", probability=True))\n",
+        "    ]),\n",
+        "    \"RandomForest\": RandomForestClassifier(n_estimators=250, random_state=42)\n",
+        "}\n",
+        "\n",
+        "results = {}\n",
+        "for name, model in models.items():\n",
+        "    model.fit(X_train, y_train)\n",
+        "    y_pred = model.predict(X_test)\n",
+        "    if hasattr(model, \"predict_proba\"):\n",
+        "        y_score = model.predict_proba(X_test)[:,1]\n",
+        "    else:\n",
+        "        # e.g., decision_function para SVM\n",
+        "        try:\n",
+        "            y_score = model.decision_function(X_test)\n",
+        "        except Exception:\n",
+        "            y_score = None\n",
+        "    results[name] = eval_clf(y_test, y_pred, y_score)\n",
+        "\n",
+        "pd.DataFrame(results).T\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "e447a093",
+      "metadata": {
+        "id": "e447a093"
+      },
+      "source": [
+        "\n",
+        "### 4) Matriz de confusión\n",
+        "Es una tabla que compara las predicciones del modelo con los valores reales.\n",
+        "Se usa en problemas de clasificación binaria o multiclase para entender qué tan bien acierta el modelo y en qué se equivoca.\n",
+        "\n",
+        "En el caso binario (ejemplo: tráfico normal vs ataque), la matriz tiene 4 casillas:\n",
+        "TP (True Positives): ataques predichos como ataques (aciertos).\n",
+        "TN (True Negatives): tráfico normal predicho como normal (aciertos).\n",
+        "FP (False Positives): tráfico normal clasificado como ataque (falsas alarmas).\n",
+        "FN (False Negatives): ataques clasificados como normales (fallas críticas)\n",
+        "\n",
+        "Curva ROC del mejor modelo\n",
+        "Muestra el rendimiento del modelo en distintos umbrales de decisión.\n",
+        "\n",
+        "El eje X representa la tasa de falsos positivos (FPR).\n",
+        "El eje Y representa la tasa de verdaderos positivos (TPR o Recall).\n",
+        "Cada punto de la curva es un umbral distinto (ejemplo: considerar ataque si probabilidad ≥ 0.7 vs ≥ 0.5).\n",
+        "\n",
+        "El AUC (Área Bajo la Curva) mide el desempeño global:\n",
+        "1.0 = modelo perfecto.\n",
+        "0.5 = modelo al azar."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "ef39a3f6",
+      "metadata": {
+        "id": "ef39a3f6"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "# Seleccionar por F1\n",
+        "best_name = max(results, key=lambda k: results[k].get(\"f1\", 0))\n",
+        "best_model = models[best_name]\n",
+        "y_pred_best = best_model.predict(X_test)\n",
+        "\n",
+        "# Matriz de confusión con matplotlib (sin seaborn)\n",
+        "cm = confusion_matrix(y_test, y_pred_best)\n",
+        "fig, ax = plt.subplots(figsize=(4,3))\n",
+        "im = ax.imshow(cm, interpolation='nearest')\n",
+        "ax.set_title(f\"Matriz de Confusión — {best_name}\")\n",
+        "ax.set_xlabel(\"Predicción\"); ax.set_ylabel(\"Real\")\n",
+        "ax.set_xticks([0,1]); ax.set_yticks([0,1])\n",
+        "for (i, j), val in np.ndenumerate(cm):\n",
+        "    ax.text(j, i, int(val), ha=\"center\", va=\"center\")\n",
+        "plt.show()\n",
+        "\n",
+        "# Curva ROC (si hay score)\n",
+        "try:\n",
+        "    if hasattr(best_model, \"predict_proba\"):\n",
+        "        y_score_best = best_model.predict_proba(X_test)[:,1]\n",
+        "    else:\n",
+        "        y_score_best = best_model.decision_function(X_test)\n",
+        "    RocCurveDisplay.from_predictions(y_test, y_score_best)\n",
+        "    plt.title(f\"Curva ROC — {best_name}\")\n",
+        "    plt.show()\n",
+        "except Exception as e:\n",
+        "    print(\"No fue posible graficar ROC:\", e)\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "a4ffdfd1",
+      "metadata": {
+        "id": "a4ffdfd1"
+      },
+      "source": [
+        "\n",
+        "### 5) Preguntas de Análisis (Coloque sus respuestas aquí)\n",
+        "1. **Métricas:** Explica con tus palabras qué significa la métrica Recall (sensibilidad) en un modelo de detección.\n",
+        "Según los resultados obtenidos, ¿qué modelo alcanzó el mejor Recall?\n",
+        "¿Por qué piensas que Recall es especialmente importante en la detección de intrusiones en redes?\n",
+        "\n",
+        "2. **Compromiso o equilibrio:** Imagina que un modelo mejora su Recall (detecta más ataques) pero empeora su Precisión (genera más falsas alarmas).\n",
+        "¿Cómo afectaría esto al trabajo diario de un Centro de Operaciones de Seguridad (SOC)?\n",
+        "¿Qué sería más grave: perder ataques reales o generar demasiadas alertas falsas? Justifica tu respuesta\n",
+        "\n",
+        "3. **Sobreajuste:** ¿Qué significa que un modelo esté “sobreajustado” a los datos de entrenamiento?\n",
+        "En el caso de Random Forest, ¿qué parámetros del modelo ajustarías para evitar el sobreajuste?\n",
+        "¿Cómo comprobarías si realmente lograste reducir el sobreajuste?\n",
+        "\n",
+        "4. **Características:** Piensa en el tráfico de red: ¿qué dos nuevas variables o características agregarías al dataset para mejorar la detección de ataques?\n",
+        "Justifica por qué esas características podrían ser útiles (ejemplo: número de intentos fallidos de login, conexiones simultáneas por IP, etc.).\n",
+        "\n",
+        "5. **Despliegue:** Si quisieras implementar tu modelo en un sistema de monitoreo de red en tiempo real, ¿qué factores deberías considerar?\n",
+        "Reflexiona sobre:\n",
+        "Latencia: qué tan rápido debe responder el modelo.\n",
+        "Ventanas de análisis: en qué intervalos de tiempo se deberían agrupar los datos.\n",
+        "Actualización: cómo mantener el modelo actualizado frente a nuevos ataques.\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "65a7a239",
+      "metadata": {
+        "id": "65a7a239"
+      },
+      "source": [
+        "\n",
+        "---\n",
+        "# **Parte II — Aprendizaje No Supervisado**  \n",
+        "\n",
+        "### 1) Datos sin etiquetas y visualización inicial\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "d6d58e21",
+      "metadata": {
+        "id": "d6d58e21"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "from sklearn.datasets import make_blobs\n",
+        "\n",
+        "X_unsup, _ = make_blobs(n_samples=500, centers=3, cluster_std=[1.2, 1.0, 1.5], random_state=7)\n",
+        "\n",
+        "# Añadimos algunos outliers\n",
+        "outliers = rng.normal(loc=[8,8], scale=[0.5,0.5], size=(10,2))\n",
+        "X_unsup = np.vstack([X_unsup, outliers])\n",
+        "\n",
+        "plt.figure(figsize=(4,3))\n",
+        "plt.scatter(X_unsup[:,0], X_unsup[:,1], s=10)\n",
+        "plt.title(\"Datos sin etiquetas\")\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "a4cb57ae",
+      "metadata": {
+        "id": "a4cb57ae"
+      },
+      "source": [
+        "\n",
+        "### 2) K-Means (centroides)\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "9a75ecc5",
+      "metadata": {
+        "id": "9a75ecc5"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "km = KMeans(n_clusters=3, random_state=7, n_init=\"auto\")\n",
+        "labels_km = km.fit_predict(X_unsup)\n",
+        "\n",
+        "plt.figure(figsize=(4,3))\n",
+        "plt.scatter(X_unsup[:,0], X_unsup[:,1], c=labels_km, s=10)\n",
+        "plt.scatter(km.cluster_centers_[:,0], km.cluster_centers_[:,1], marker=\"x\", s=120)\n",
+        "plt.title(\"K-Means: clústeres por centroides\")\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "47b6993e",
+      "metadata": {
+        "id": "47b6993e"
+      },
+      "source": [
+        "\n",
+        "### 3) DBSCAN (densidad + outliers)\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "47299cca",
+      "metadata": {
+        "id": "47299cca"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "db = DBSCAN(eps=0.9, min_samples=5)\n",
+        "labels_db = db.fit_predict(X_unsup)\n",
+        "\n",
+        "plt.figure(figsize=(4,3))\n",
+        "plt.scatter(X_unsup[:,0], X_unsup[:,1], c=labels_db, s=10)\n",
+        "plt.title(\"DBSCAN: clústeres por densidad (outliers = -1)\")\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "d703d674",
+      "metadata": {
+        "id": "d703d674"
+      },
+      "source": [
+        "\n",
+        "### 4) PCA (reducción de dimensionalidad a 2 componentes)\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "d2086b22",
+      "metadata": {
+        "id": "d2086b22"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "from sklearn.preprocessing import StandardScaler\n",
+        "scaler = StandardScaler()\n",
+        "X_scaled = scaler.fit_transform(X_unsup)\n",
+        "\n",
+        "pca = PCA(n_components=2)\n",
+        "X_pca = pca.fit_transform(X_scaled)\n",
+        "var_exp = pca.explained_variance_ratio_.sum()\n",
+        "\n",
+        "plt.figure(figsize=(4,3))\n",
+        "plt.scatter(X_pca[:,0], X_pca[:,1], s=10)\n",
+        "plt.title(f\"PCA 2D (varianza explicada: {var_exp:.2%})\")\n",
+        "plt.xlabel(\"PC1\"); plt.ylabel(\"PC2\")\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "bfeee179",
+      "metadata": {
+        "id": "bfeee179"
+      },
+      "source": [
+        "\n",
+        "### 5) GMM (clústeres probabilísticos) + confianza\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "id": "b33416f4",
+      "metadata": {
+        "id": "b33416f4"
+      },
+      "outputs": [],
+      "source": [
+        "\n",
+        "gmm = GaussianMixture(n_components=3, random_state=7)\n",
+        "labels_gmm = gmm.fit_predict(X_unsup)\n",
+        "probs = gmm.predict_proba(X_unsup).max(axis=1)\n",
+        "\n",
+        "plt.figure(figsize=(4,3))\n",
+        "plt.scatter(X_unsup[:,0], X_unsup[:,1], c=labels_gmm, s=10)\n",
+        "plt.title(\"GMM: clústeres probabilísticos\")\n",
+        "plt.show()\n",
+        "\n",
+        "plt.figure(figsize=(4,3))\n",
+        "plt.hist(probs, bins=20)\n",
+        "plt.title(\"Confianza de pertenencia (máx. probabilidad por punto)\")\n",
+        "plt.xlabel(\"Probabilidad\"); plt.ylabel(\"Frecuencia\")\n",
+        "plt.show()\n"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "id": "a5d92b85",
+      "metadata": {
+        "id": "a5d92b85"
+      },
+      "source": [
+        "\n",
+        "### 6) Preguntas de Análisis (Coloque sus respuestas aqui)\n",
+        "1. **K-Means vs DBSCAN:** ¿En qué situaciones de la vida real sería mejor usar DBSCAN en lugar de K-Means?\n",
+        "Piensa en dos aspectos:\n",
+        "Cómo maneja los valores atípicos (outliers).\n",
+        "Qué tan bien detecta grupos con formas irregulares (no circulares).\n",
+        "2. **PCA:** ¿Por qué crees que es necesario escalar o estandarizar los datos antes de aplicar PCA?\n",
+        "Cuando PCA indica que las dos primeras componentes explican, por ejemplo, el 85% de la varianza, ¿qué significa eso en términos prácticos de la información contenida en los datos?\n",
+        "3. **GMM:** A diferencia de K-Means, GMM da una probabilidad de pertenencia a cada grupo en lugar de asignar un dato de manera rígida.\n",
+        "¿Por qué esto puede ser una ventaja?\n",
+        "Da un ejemplo de un caso “intermedio” donde un dato podría pertenecer en parte a dos grupos (por ejemplo, un usuario que a veces navega de manera normal y a veces tiene patrones sospechosos).\n",
+        "4. **Selección de hiperparámetros:** En K-Means, ¿cómo decidirías el número de grupos k adecuado?\n",
+        "En DBSCAN, ¿cómo seleccionarías los parámetros eps (radio de vecindad) y min_samples (mínimo de puntos por grupo)?\n",
+        "Propón un procedimiento práctico para hacer esta selección (ejemplo: usar el “método del codo” o probar diferentes valores y comparar resultados).\n",
+        "5. **Reglas de anomalía:** Propón una regla sencilla para marcar datos como anómalos usando:\n",
+        "GMM: por ejemplo, si la probabilidad de pertenecer a cualquier grupo es menor a cierto umbral (ej. 0.6).\n",
+        "DBSCAN: considerar como anomalías a todos los puntos que recibieron la etiqueta -1 (es decir, que quedaron fuera de los clústeres).\n"
+      ]
+    }
+  ],
+  "metadata": {
+    "colab": {
+      "provenance": []
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
