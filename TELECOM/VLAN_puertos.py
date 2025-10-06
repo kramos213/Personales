@@ -6,7 +6,7 @@ import re
 
 # Configuración de las credenciales y base de datos
 USERNAME = "TPC"
-PASSWORD = "Tpc2020*"
+PASSWORD = "Us3r@Tpc2024*"
 
 switch_ips_by_area = {
     "PSO": ["172.16.0.151", "172.16.0.150", "172.16.0.118","172.16.0.102", "172.16.0.101", "172.16.0.147", "172.16.0.148", "172.16.0.116"],
