@@ -1,84 +1,90 @@
-import os
 import platform
 import subprocess
 import statistics
+import time
 
-def ping_test(host, count=10):
-    system = platform.system().lower()
-    ping_cmd = ["ping", "-n" if system == "windows" else "-c", str(count), host]
+def medir_qos(host, paquetes=50):
+    print("=== Analizador de Calidad de Servicio (QoS) ===\n")
+    print(f"Probando calidad de conexión con {host}...\n")
+
+    sistema = platform.system().lower()
+
+    # Configurar comando de ping según el sistema operativo
+    if sistema == "windows":
+        comando = ["ping", host, "-n", str(paquetes), "-w", "1000"]
+    else:
+        comando = ["ping", "-c", str(paquetes), "-i", "0.2", host]
 
     try:
-        output = subprocess.check_output(ping_cmd, stderr=subprocess.STDOUT, universal_newlines=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error ejecutando ping: {e.output}")
-        return []
-
-    # Extraer tiempos de respuesta
-    latencies = []
-    for line in output.split("\n"):
-        if "time=" in line.lower():
-            parts = line.replace("=", " ").split()
-            for p in parts:
-                if "ms" in p:
-                    try:
-                        latencies.append(float(p.replace("ms", "")))
-                    except ValueError:
-                        pass
-    return latencies
-
-def analizar_conexion(latencias):
-    enviados = len(latencias)
-    recibidos = enviados  # Asumimos todos recibidos si tenemos latencias
-    perdida = 0.0  # podrías ajustar si haces un ping más avanzado
-
-    if not latencias:
-        print("No se recibieron respuestas del host.")
+        salida = subprocess.check_output(comando, universal_newlines=True)
+    except subprocess.CalledProcessError:
+        print("❌ Error al ejecutar ping. El host no responde.")
         return
 
-    lat_min = min(latencias)
-    lat_max = max(latencias)
-    lat_prom = sum(latencias) / len(latencias)
-    jitter = statistics.stdev(latencias) if len(latencias) > 1 else 0.0
+    # Extraer tiempos de ping
+    tiempos = []
+    for linea in salida.splitlines():
+        if "tiempo" in linea or "time=" in linea:
+            partes = linea.replace("=", " ").split()
+            for p in partes:
+                if p.endswith("ms"):
+                    try:
+                        tiempo = float(p.replace("ms", "").replace(",", "."))
+                        tiempos.append(tiempo)
+                    except ValueError:
+                        continue
 
-    print("\n--- Resultados ---")
+    if not tiempos:
+        print("❌ No se pudieron medir los tiempos de respuesta (ICMP bloqueado o error).")
+        return
+
+    # Calcular métricas QoS
+    enviados = paquetes
+    recibidos = len(tiempos)
+    perdidos = enviados - recibidos
+    perdida_pct = (perdidos / enviados) * 100
+    latencia_min = min(tiempos)
+    latencia_max = max(tiempos)
+    latencia_prom = statistics.mean(tiempos)
+    jitter = statistics.pstdev(tiempos)
+
+    # Mostrar resultados
+    print("--- Resultados de la prueba ---")
     print(f"Paquetes enviados: {enviados}")
     print(f"Paquetes recibidos: {recibidos}")
-    print(f"Pérdida de paquetes: {perdida}%")
-    print(f"Latencia promedio: {lat_prom:.2f} ms")
-    print(f"Latencia mínima: {lat_min:.2f} ms")
-    print(f"Latencia máxima: {lat_max:.2f} ms")
-    print(f"Jitter: {jitter:.2f} ms")
+    print(f"Pérdida de paquetes: {perdida_pct:.1f}%")
+    print(f"Latencia promedio: {latencia_prom:.2f} ms")
+    print(f"Latencia mínima: {latencia_min:.2f} ms")
+    print(f"Latencia máxima: {latencia_max:.2f} ms")
+    print(f"Jitter (variación): {jitter:.2f} ms")
 
-    # Clasificación de calidad
-    if perdida > 5 or lat_prom > 150 or jitter > 50:
-        calidad = "Mala"
-    elif lat_prom > 80 or jitter > 30:
-        calidad = "Regular"
+    # Evaluar calidad
+    print("\n--- Evaluación de Calidad ---")
+    if perdida_pct > 10 or latencia_prom > 300:
+        calidad = "❌ Deficiente"
+        consejo = "Hay alta latencia o pérdida. Posible congestión o QoS mal configurado."
+    elif jitter > 100 or latencia_prom > 150:
+        calidad = "⚠️ Regular"
+        consejo = "La conexión presenta variaciones notables. Revisa colas o priorización de tráfico."
     else:
-        calidad = "Buena"
+        calidad = "✅ Buena"
+        consejo = "La conexión es estable, latencia baja y sin pérdida significativa."
 
-    print(f"Calidad de conexión: {calidad}")
+    print(f"Calidad general del enlace: {calidad}")
+    print(f"Sugerencia: {consejo}\n")
 
-    # Recomendaciones automáticas
-    print("\n--- Recomendaciones ---")
-    if calidad == "Buena":
-        print("✅ La conexión es estable. No se requieren mejoras.")
-    else:
-        if perdida > 5:
-            print("⚠️ Alta pérdida de paquetes. Revisa el cableado, conexión Wi-Fi o congestión en la red.")
-        if lat_prom > 150:
-            print("📶 Alta latencia. Posible saturación de la red o mala ruta hacia el servidor.")
-        if jitter > 50:
-            print("📈 Alto jitter. Puede afectar aplicaciones en tiempo real (voz/video).")
-        print("🔍 Recomendado: probar con otro cable, otro punto de red o realizar trazado (traceroute) para identificar el salto problemático.")
+    # Diagnóstico adicional
+    print("--- Diagnóstico técnico ---")
+    if jitter > 50:
+        print("• Alta variación de tiempos (jitter alto): posible congestión o mala configuración QoS.")
+    if perdida_pct > 0:
+        print("• Pérdida de paquetes detectada: verifica colas o tráfico saturado.")
+    if latencia_prom > 150:
+        print("• Latencia elevada: puede ser ruta larga o enlace sobrecargado.")
+    if perdida_pct == 0 and jitter < 20 and latencia_prom < 100:
+        print("• El enlace muestra comportamiento óptimo para voz, video o tráfico sensible.\n")
+    print("Fin del análisis.\n")
 
-# --- Programa principal ---
-print("=== Analizador de Conexión de Red ===")
-nombre = input("Introduce el nombre del servidor o IP: ")
-print(f"\nProbando conexión con {nombre}...\n")
-
-latencias = ping_test(nombre)
-for i, lat in enumerate(latencias, start=1):
-    print(f"Ping {i}: {lat:.2f} ms")
-
-analizar_conexion(latencias)
+if __name__ == "__main__":
+    host = input("Introduce la IP o nombre del servidor a analizar: ").strip()
+    medir_qos(host)
