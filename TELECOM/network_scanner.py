@@ -2,8 +2,13 @@ import nmap
 import subprocess
 import socket
 import csv
+import os
+from datetime import datetime
 import re
 from multiprocessing import Pool, cpu_count
+
+# Carpeta fija donde se guardarán los CSV
+EXPORT_FOLDER = r"C:\Users\kramos\Documents\TPC - TECNICO\ESTACIONES DE TRABAJAO"
 
 
 # =============================================
@@ -11,8 +16,31 @@ from multiprocessing import Pool, cpu_count
 # =============================================
 
 REDES = [
-    "10.1.60.1/24",
-    "10.1.115.1/24"
+    "10.1.60.0/24",
+    "10.1.115.0/24",
+    "10.1.230.1/24",
+    "10.1.228.1/24",
+    "10.1.227.1/24",
+    "10.1.226.1/24",
+    "10.1.221.1/24",
+    "10.1.220.1/24",
+    "10.1.215.1/24",
+    "10.1.208.1/24",
+    "10.1.207.1/24",
+    "10.1.206.1/24",
+    "10.1.130.1/24",
+    "10.1.128.1/24",
+    "10.1.127.1/24",
+    "10.1.126.1/24",
+    "10.1.124.1/24",
+    "10.1.121.1/24",
+    "10.1.120.1/24",
+    "10.1.119.1/24",
+    "10.1.118.1/24",
+    "10.1.117.1/24",
+    "10.1.116.1/24",
+    "10.1.115.1/24",
+    "10.1.60.1/24"
     # Agrega aquí tus 23 redes
 ]
 
@@ -102,16 +130,31 @@ def scan_network(red):
 # =============================================
 # EXPORTAR A CSV
 # =============================================
-def export_csv(data, file="resultado_scan.csv"):
+def export_csv(data):
     keys = ["ip", "hostname", "mac", "vendor", "puertos"]
 
-    with open(file, "w", newline="", encoding="utf-8") as f:
+    # Crear carpeta si no existe
+    os.makedirs(EXPORT_FOLDER, exist_ok=True)
+
+    # Crear nombre automático con fecha y hora
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    file_name = f"resultado_scan_{timestamp}.csv"
+
+    # Ruta completa para guardar
+    full_path = os.path.join(EXPORT_FOLDER, file_name)
+
+    with open(full_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=keys)
         writer.writeheader()
+        
+        # Normalizar puertos en caso de ser lista
+        for row in data:
+            if isinstance(row.get("puertos"), list):
+                row["puertos"] = ", ".join(str(p) for p in row["puertos"])
         writer.writerows(data)
 
-    print(f"\n📁 CSV generado: {file}")
-
+    print(f"\n📁 CSV generado correctamente:")
+    print(f"➡ {full_path}")
 
 # =============================================
 # MAIN
