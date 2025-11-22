@@ -4,7 +4,8 @@ using namespace std;
 int main() {
     const int DIAS = 28;
     double ventas[DIAS];
-    bool registrado = false;
+    int datosIngresados = 0; 
+
     int opcion;
 
     do {
@@ -22,11 +23,11 @@ int main() {
                 cout << "Venta del dia " << (i + 1) << ": ";
                 cin >> ventas[i];
             }
-            registrado = true;
+            datosIngresados = 1; 
         }
 
         else if (opcion == 2) {
-            if (!registrado) {
+            if (datosIngresados == 0) {
                 cout << "Debe ingresar las ventas primero.\n";
             } else {
                 double total = 0;
@@ -68,7 +69,7 @@ int main() {
         }
 
         else if (opcion == 3) {
-            registrado = false;
+            datosIngresados = 0; // Se vuelve a 0
             cout << "Datos reiniciados.\n";
         }
 
