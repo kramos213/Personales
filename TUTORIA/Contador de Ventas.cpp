@@ -3,9 +3,14 @@ using namespace std;
 
 int main() {
     const int DIAS = 28;
-    double ventas[DIAS];
-    int datosIngresados = 0; 
 
+    double total = 0;
+    double mayor = 0;
+    double menor = 0;
+    int diaMayor = 0;
+    int diaMenor = 0;
+
+    int datosIngresados = 0;
     int opcion;
 
     do {
@@ -18,37 +23,46 @@ int main() {
         cin >> opcion;
 
         if (opcion == 1) {
-            // Ingresar ventas
-            for (int i = 0; i < DIAS; i++) {
-                cout << "Venta del dia " << (i + 1) << ": ";
-                cin >> ventas[i];
+            // Reiniciar acumuladores para nueva entrada
+            total = 0;
+            mayor = 0;
+            menor = 0;
+            diaMayor = 0;
+            diaMenor = 0;
+
+            double venta;
+
+            for (int i = 1; i <= DIAS; i++) {
+                cout << "Venta del dia " << i << ": ";
+                cin >> venta;
+
+                total += venta;
+
+                if (i == 1) { 
+                    mayor = venta;
+                    menor = venta;
+                    diaMayor = 1;
+                    diaMenor = 1;
+                }
+
+                if (venta > mayor) {
+                    mayor = venta;
+                    diaMayor = i;
+                }
+
+                if (venta < menor) {
+                    menor = venta;
+                    diaMenor = i;
+                }
             }
-            datosIngresados = 1; 
+
+            datosIngresados = 1;
         }
 
         else if (opcion == 2) {
             if (datosIngresados == 0) {
                 cout << "Debe ingresar las ventas primero.\n";
             } else {
-                double total = 0;
-                double mayor = ventas[0];
-                double menor = ventas[0];
-                
-                int diaMayor = 1, diaMenor = 1;
-
-                for (int i = 0; i < DIAS; i++) {
-                    total += ventas[i];
-
-                    if (ventas[i] > mayor) {
-                        mayor = ventas[i];
-                        diaMayor = i + 1;
-                    }
-                    if (ventas[i] < menor) {
-                        menor = ventas[i];
-                        diaMenor = i + 1;
-                    }
-                }
-
                 double promedioDiario = total / 28;
                 double promedioSemanal = total / 4;
                 double comision;
@@ -69,7 +83,7 @@ int main() {
         }
 
         else if (opcion == 3) {
-            datosIngresados = 0; // Se vuelve a 0
+            datosIngresados = 0;
             cout << "Datos reiniciados.\n";
         }
 
