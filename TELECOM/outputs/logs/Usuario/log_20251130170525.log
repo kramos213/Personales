@@ -1,0 +1,338 @@
+2025-11-30T17:06:19.531491-0500 INFO Comando ejecutado: enable
+2025-11-30T17:06:21.535445-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:06:26.538787-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:06:31.543144-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:06:33.547690-0500 INFO Comando ejecutado: end
+2025-11-30T17:06:38.551620-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:06:38.554129-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.118 (P-SO).
+2025-11-30T17:06:42.812583-0500 INFO Comando ejecutado: enable
+2025-11-30T17:06:44.843026-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:06:49.847927-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:06:54.850556-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:06:56.854008-0500 INFO Comando ejecutado: end
+2025-11-30T17:07:01.857771-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:07:01.860701-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.151 (P-SO).
+2025-11-30T17:07:07.265832-0500 INFO Comando ejecutado: enable
+2025-11-30T17:07:09.268661-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:07:14.271549-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:07:19.276916-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:07:21.280052-0500 INFO Comando ejecutado: end
+2025-11-30T17:07:26.283432-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:07:26.285835-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.148 (P-SO).
+2025-11-30T17:07:30.553855-0500 INFO Comando ejecutado: enable
+2025-11-30T17:07:32.558617-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:07:37.562756-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:07:42.565964-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:07:44.569201-0500 INFO Comando ejecutado: end
+2025-11-30T17:07:49.574244-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:07:49.578196-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.150 (P-SO).
+2025-11-30T17:07:55.994908-0500 INFO Comando ejecutado: enable
+2025-11-30T17:07:57.998194-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:08:03.001520-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:08:08.006009-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:08:10.011281-0500 INFO Comando ejecutado: end
+2025-11-30T17:08:15.014946-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:08:15.019573-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.102 (P-SO).
+2025-11-30T17:08:21.127032-0500 INFO Comando ejecutado: enable
+2025-11-30T17:08:23.130807-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:08:28.134802-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:08:33.139659-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:08:35.143998-0500 INFO Comando ejecutado: end
+2025-11-30T17:08:40.147378-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:08:40.149255-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.116 (P-SO).
+2025-11-30T17:08:45.514434-0500 INFO Comando ejecutado: enable
+2025-11-30T17:08:47.520684-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:08:52.525262-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:08:57.528842-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:08:59.532784-0500 INFO Comando ejecutado: end
+2025-11-30T17:09:04.537322-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:09:04.540143-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.101 (P-SO).
+2025-11-30T17:09:10.515430-0500 INFO Comando ejecutado: enable
+2025-11-30T17:09:12.520298-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:09:17.523590-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:09:22.526823-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:09:24.529564-0500 INFO Comando ejecutado: end
+2025-11-30T17:09:29.532265-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:09:29.536256-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.147 (P-SO).
+2025-11-30T17:09:33.759986-0500 INFO Comando ejecutado: enable
+2025-11-30T17:09:35.764215-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:09:40.768785-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:09:45.772050-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:09:47.774382-0500 INFO Comando ejecutado: end
+2025-11-30T17:09:52.778636-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:09:52.780837-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.142 (P-PB).
+2025-11-30T17:09:57.912769-0500 INFO Comando ejecutado: enable
+2025-11-30T17:09:59.917325-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:10:04.921730-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:10:09.925314-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:10:11.929206-0500 INFO Comando ejecutado: end
+2025-11-30T17:10:16.934616-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:10:16.936880-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.107 (P-PB).
+2025-11-30T17:10:22.211285-0500 INFO Comando ejecutado: enable
+2025-11-30T17:10:24.215144-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:10:29.219011-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:10:34.221974-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:10:36.224427-0500 INFO Comando ejecutado: end
+2025-11-30T17:10:41.228785-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:10:41.232391-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.106 (P-PB).
+2025-11-30T17:10:46.711589-0500 INFO Comando ejecutado: enable
+2025-11-30T17:10:48.714814-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:10:53.719164-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:10:58.722127-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:11:00.725732-0500 INFO Comando ejecutado: end
+2025-11-30T17:11:05.730962-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:11:05.734450-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.105 (P-PB).
+2025-11-30T17:11:11.395681-0500 INFO Comando ejecutado: enable
+2025-11-30T17:11:13.400681-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:11:18.404705-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:11:23.411885-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:11:25.415709-0500 INFO Comando ejecutado: end
+2025-11-30T17:11:30.419055-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:11:30.421502-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.104 (P-PB).
+2025-11-30T17:11:36.242428-0500 INFO Comando ejecutado: enable
+2025-11-30T17:11:38.245554-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:11:43.249417-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:11:48.253947-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:11:50.257530-0500 INFO Comando ejecutado: end
+2025-11-30T17:11:55.262431-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:11:55.265341-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.103 (P-PB).
+2025-11-30T17:12:01.055836-0500 INFO Comando ejecutado: enable
+2025-11-30T17:12:03.059842-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:12:08.063359-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:12:13.066568-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:12:15.068730-0500 INFO Comando ejecutado: end
+2025-11-30T17:12:20.072055-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:12:20.074631-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.143 (P-PB).
+2025-11-30T17:12:24.362787-0500 INFO Comando ejecutado: enable
+2025-11-30T17:12:26.366393-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:12:31.369617-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:12:36.373463-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:12:38.381167-0500 INFO Comando ejecutado: end
+2025-11-30T17:12:43.384974-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:12:43.388429-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.145 (P-24).
+2025-11-30T17:12:48.165621-0500 INFO Comando ejecutado: enable
+2025-11-30T17:12:50.169283-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:12:55.173082-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:13:00.177466-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:13:02.182951-0500 INFO Comando ejecutado: end
+2025-11-30T17:13:07.186693-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:13:07.189259-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.200 (P-24).
+2025-11-30T17:13:12.634972-0500 INFO Comando ejecutado: enable
+2025-11-30T17:13:14.638461-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:13:19.643044-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:13:24.648140-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:13:26.652996-0500 INFO Comando ejecutado: end
+2025-11-30T17:13:31.661223-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:13:31.663816-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.135 (P-18).
+2025-11-30T17:13:36.818431-0500 INFO Comando ejecutado: enable
+2025-11-30T17:13:38.822949-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:13:43.826830-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:13:48.830417-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:13:50.833180-0500 INFO Comando ejecutado: end
+2025-11-30T17:13:55.837006-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:13:55.841558-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.134 (P-18).
+2025-11-30T17:14:01.157974-0500 INFO Comando ejecutado: enable
+2025-11-30T17:14:03.161869-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:14:08.166843-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:14:13.172783-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:14:15.178089-0500 INFO Comando ejecutado: end
+2025-11-30T17:14:20.181154-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:14:20.183664-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.133 (P-18).
+2025-11-30T17:14:24.442906-0500 INFO Comando ejecutado: enable
+2025-11-30T17:14:26.446036-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:14:31.450442-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:14:36.454665-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:14:38.458798-0500 INFO Comando ejecutado: end
+2025-11-30T17:14:43.463259-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:14:43.465571-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.149 (P-18).
+2025-11-30T17:14:50.906955-0500 INFO Comando ejecutado: enable
+2025-11-30T17:14:52.909863-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:14:57.913498-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:15:02.917296-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:15:04.921130-0500 INFO Comando ejecutado: end
+2025-11-30T17:15:09.924634-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:15:09.926680-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.136 (P-17).
+2025-11-30T17:15:15.582756-0500 INFO Comando ejecutado: enable
+2025-11-30T17:15:17.589944-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:15:22.594216-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:15:27.597329-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:15:29.601458-0500 INFO Comando ejecutado: end
+2025-11-30T17:15:34.606644-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:15:34.609348-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.131 (P-17).
+2025-11-30T17:15:39.939702-0500 INFO Comando ejecutado: enable
+2025-11-30T17:15:41.943594-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:15:46.947610-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:15:51.952992-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:15:53.956664-0500 INFO Comando ejecutado: end
+2025-11-30T17:15:58.960889-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:15:58.964459-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.132 (P-17).
+2025-11-30T17:16:07.410559-0500 INFO Comando ejecutado: enable
+2025-11-30T17:16:09.415536-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:16:14.420339-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:16:21.761437-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:16:23.767594-0500 INFO Comando ejecutado: end
+2025-11-30T17:16:28.773164-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:16:28.776933-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.138 (P-16).
+2025-11-30T17:16:34.485557-0500 INFO Comando ejecutado: enable
+2025-11-30T17:16:36.489372-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:16:41.493513-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:16:46.498690-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:16:48.506258-0500 INFO Comando ejecutado: end
+2025-11-30T17:16:53.509098-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:16:53.511595-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.130 (P-16).
+2025-11-30T17:16:59.855253-0500 INFO Comando ejecutado: enable
+2025-11-30T17:17:01.858860-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:17:06.866300-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:17:11.869947-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:17:13.873283-0500 INFO Comando ejecutado: end
+2025-11-30T17:17:18.877076-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:17:18.882319-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.129 (P-16).
+2025-11-30T17:17:24.621640-0500 INFO Comando ejecutado: enable
+2025-11-30T17:17:26.624476-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:17:31.631745-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:17:36.635605-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:17:38.639176-0500 INFO Comando ejecutado: end
+2025-11-30T17:17:43.642529-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:17:43.647262-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.128 (P-14).
+2025-11-30T17:17:49.284453-0500 INFO Comando ejecutado: enable
+2025-11-30T17:17:51.287674-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:17:56.291524-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:18:01.296913-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:18:03.301016-0500 INFO Comando ejecutado: end
+2025-11-30T17:18:08.305484-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:18:08.307539-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.127 (P-14).
+2025-11-30T17:18:13.582550-0500 INFO Comando ejecutado: enable
+2025-11-30T17:18:15.585742-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:18:20.589994-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:18:25.596683-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:18:27.599767-0500 INFO Comando ejecutado: end
+2025-11-30T17:18:32.604504-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:18:32.606974-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.125 (P-11).
+2025-11-30T17:18:37.883259-0500 INFO Comando ejecutado: enable
+2025-11-30T17:18:39.887186-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:18:44.890512-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:18:49.897522-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:18:51.900540-0500 INFO Comando ejecutado: end
+2025-11-30T17:18:56.903706-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:18:56.906461-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.137 (P-11).
+2025-11-30T17:19:02.107086-0500 INFO Comando ejecutado: enable
+2025-11-30T17:19:04.111761-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:19:09.116350-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:19:14.119558-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:19:16.123212-0500 INFO Comando ejecutado: end
+2025-11-30T17:19:21.131504-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:19:21.134147-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.126 (P-11).
+2025-11-30T17:19:26.184739-0500 INFO Comando ejecutado: enable
+2025-11-30T17:19:28.188688-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:19:33.192678-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:19:38.196394-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:19:40.199755-0500 INFO Comando ejecutado: end
+2025-11-30T17:19:45.203609-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:19:45.206632-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.139 (P-11).
+2025-11-30T17:19:50.409124-0500 INFO Comando ejecutado: enable
+2025-11-30T17:19:52.413006-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:19:57.417526-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:20:02.423205-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:20:04.426507-0500 INFO Comando ejecutado: end
+2025-11-30T17:20:09.429698-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:20:09.432416-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.124 (P-10).
+2025-11-30T17:20:15.259889-0500 INFO Comando ejecutado: enable
+2025-11-30T17:20:17.263432-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:20:22.267165-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:20:27.271815-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:20:29.279676-0500 INFO Comando ejecutado: end
+2025-11-30T17:20:34.284860-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:20:34.287299-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.123 (P-10).
+2025-11-30T17:20:39.996209-0500 INFO Comando ejecutado: enable
+2025-11-30T17:20:41.999805-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:20:47.004054-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:20:52.008722-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:20:54.012550-0500 INFO Comando ejecutado: end
+2025-11-30T17:20:59.015306-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:20:59.018379-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.121 (P-09).
+2025-11-30T17:21:03.851165-0500 INFO Comando ejecutado: enable
+2025-11-30T17:21:05.857804-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:21:10.860809-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:21:15.864796-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:21:17.868478-0500 INFO Comando ejecutado: end
+2025-11-30T17:21:22.875889-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:21:22.878572-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.120 (P-09).
+2025-11-30T17:21:28.175067-0500 INFO Comando ejecutado: enable
+2025-11-30T17:21:30.178846-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:21:35.183123-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:21:40.192080-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:21:42.195650-0500 INFO Comando ejecutado: end
+2025-11-30T17:21:47.199970-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:21:47.202676-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.114 (P-08).
+2025-11-30T17:21:52.805743-0500 INFO Comando ejecutado: enable
+2025-11-30T17:21:54.809960-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:21:59.814032-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:22:04.818381-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:22:06.823088-0500 INFO Comando ejecutado: end
+2025-11-30T17:22:11.826599-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:22:11.829260-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.113 (P-08).
+2025-11-30T17:22:17.327070-0500 INFO Comando ejecutado: enable
+2025-11-30T17:22:19.336507-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:22:24.341144-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:22:29.345643-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:22:31.348960-0500 INFO Comando ejecutado: end
+2025-11-30T17:22:36.352978-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:22:36.356207-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.141 (P-07).
+2025-11-30T17:22:40.613741-0500 INFO Comando ejecutado: enable
+2025-11-30T17:22:42.618381-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:22:47.621919-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:22:52.625984-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:22:54.629890-0500 INFO Comando ejecutado: end
+2025-11-30T17:22:59.636081-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:22:59.638466-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.115 (P-07).
+2025-11-30T17:23:05.094711-0500 INFO Comando ejecutado: enable
+2025-11-30T17:23:07.098781-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:23:12.105645-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:23:17.108595-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:23:19.111573-0500 INFO Comando ejecutado: end
+2025-11-30T17:23:24.116558-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:23:24.120851-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.112 (P-07).
+2025-11-30T17:23:29.479409-0500 INFO Comando ejecutado: enable
+2025-11-30T17:23:31.483779-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:23:36.488384-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:23:41.491971-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:23:43.495615-0500 INFO Comando ejecutado: end
+2025-11-30T17:23:48.500670-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:23:48.504676-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.110 (P-07).
+2025-11-30T17:23:53.736457-0500 INFO Comando ejecutado: enable
+2025-11-30T17:23:55.740955-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:24:00.744459-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:24:05.750020-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:24:07.753281-0500 INFO Comando ejecutado: end
+2025-11-30T17:24:12.758499-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:24:12.761318-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.111 (P-07).
+2025-11-30T17:24:18.449730-0500 INFO Comando ejecutado: enable
+2025-11-30T17:24:20.453434-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:24:25.456978-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:24:30.461861-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:24:32.466355-0500 INFO Comando ejecutado: end
+2025-11-30T17:24:37.469890-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:24:37.472210-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.108 (P-06).
+2025-11-30T17:24:42.910934-0500 INFO Comando ejecutado: enable
+2025-11-30T17:24:44.916287-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:24:49.921590-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:24:54.925410-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:24:56.931802-0500 INFO Comando ejecutado: end
+2025-11-30T17:25:01.934960-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:25:01.936712-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.109 (P-06).
+2025-11-30T17:25:06.194265-0500 INFO Comando ejecutado: enable
+2025-11-30T17:25:08.198399-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:25:13.202034-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:25:18.205570-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:25:20.213606-0500 INFO Comando ejecutado: end
+2025-11-30T17:25:25.217914-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:25:25.220661-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.146 (P-06).
+2025-11-30T17:25:29.472072-0500 INFO Comando ejecutado: enable
+2025-11-30T17:25:31.476608-0500 INFO Comando ejecutado: conf t
+2025-11-30T17:25:36.480605-0500 INFO Comando ejecutado: username AGARCIA privilege 15 password bSM@82S8Ce
+2025-11-30T17:25:41.484406-0500 INFO Comando ejecutado: ssh server allow-users AGARCIA
+2025-11-30T17:25:43.487244-0500 INFO Comando ejecutado: end
+2025-11-30T17:25:48.489953-0500 INFO Comando ejecutado: write memory
+2025-11-30T17:25:48.493973-0500 INFO Usuario 'AGARCIA' creado en 172.16.0.140 (P-06).
+2025-11-30T17:26:09.551156-0500 ERROR Ocurrió un error al create el usuario 'AGARCIA' en 172.16.0.201 (P-06): [WinError 10060] Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2025-11-30T17:26:30.578864-0500 ERROR Ocurrió un error al create el usuario 'AGARCIA' en 172.16.0.202 (P-06): [WinError 10060] Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
