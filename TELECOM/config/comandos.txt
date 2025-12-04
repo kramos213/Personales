@@ -1,0 +1,7 @@
+access-list 10 permit {{IP}}
+access-list 10 deny any
+
+snmp-server community {{SNMP}} ro 10
+snmp-server contact "{{CONTACTO}}"
+
+save
