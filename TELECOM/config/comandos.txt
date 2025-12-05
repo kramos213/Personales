@@ -1,7 +1,6 @@
-access-list 10 permit {{IP}}
-access-list 10 deny any
+snmp-server
+snmp-server contact Tecnologia
+snmp-server enable trap auth
+snmp-server community tpc_public 10
+snmp-server host 10.1.1.201 version 2c tpc_public
 
-snmp-server community {{SNMP}} ro 10
-snmp-server contact "{{CONTACTO}}"
-
-save

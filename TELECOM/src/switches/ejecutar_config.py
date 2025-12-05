@@ -1,16 +1,14 @@
 import os
 from concurrent.futures import ThreadPoolExecutor
-from dotenv import load_dotenv
 from netmiko import ConnectHandler
 
 # ======================
-# CARGAR .ENV
+# CARGAR CREDENCIALES
 # ======================
+from dotenv import load_dotenv
 load_dotenv()
 USER = os.getenv("SW_USER")
 PASSWORD = os.getenv("SW_PASSWORD")
-SNMP_COMM = os.getenv("SNMP_COMMUNITY")
-SNMP_CONTACT = os.getenv("SNMP_CONTACT")
 
 # ======================
 # FUNCIONES
@@ -36,21 +34,15 @@ def cargar_areas(archivo):
 
 def cargar_comandos(archivo):
     with open(archivo, "r") as f:
-        return f.read()
-
-
-def preparar_comandos(ip, plantilla):
-    c = plantilla.replace("{{IP}}", ip)
-    c = c.replace("{{SNMP}}", SNMP_COMM)
-    c = c.replace("{{CONTACTO}}", SNMP_CONTACT)
-    return c.splitlines()
+        # Solo devuelve las líneas tal cual
+        return [linea.strip() for linea in f if linea.strip()]
 
 
 def ejecutar_en_switch(ip, comandos):
     print(f"🔌 Conectando a {ip}...")
 
     device = {
-        "device_type": "allied_telesis_awplus",   # Para Allied Telesis
+        "device_type": "allied_telesis_awplus",
         "host": ip,
         "username": USER,
         "password": PASSWORD,
@@ -65,7 +57,7 @@ def ejecutar_en_switch(ip, comandos):
         ssh.save_config()
         ssh.disconnect()
 
-        print(f"✅ Configuración aplicada en {ip}")
+        print(f"✅ Comandos ejecutados en {ip}")
         return f"[OK] {ip}\n{salida}\n"
 
     except Exception as e:
@@ -76,24 +68,17 @@ def ejecutar_en_switch(ip, comandos):
 # ======================
 # PROGRAMA PRINCIPAL
 # ======================
-areas = cargar_areas("../config/areas.txt")
-plantilla = cargar_comandos("../config/comandos.txt")
+areas = cargar_areas("C:\\Git-Kevin\\Personales\\TELECOM\\config\\areas.txt")
+comandos = cargar_comandos("C:\\Git-Kevin\\Personales\\TELECOM\\config\\comandos.txt")
 
 # LOG
-with open("../outputs/log_config.txt", "w") as log:
-
+with open("C:\\Git-Kevin\\Personales\\TELECOM\\outputs\\log_config.txt", "w") as log:
     for area, ips in areas.items():
         print(f"\n===== Área {area} =====")
 
-        # Ejecutar en paralelo (hasta 10 switches simultáneos)
         with ThreadPoolExecutor(max_workers=10) as executor:
-
             tareas = {
-                executor.submit(
-                    ejecutar_en_switch,
-                    ip,
-                    preparar_comandos(ip, plantilla)
-                ): ip for ip in ips
+                executor.submit(ejecutar_en_switch, ip, comandos): ip for ip in ips
             }
 
             for tarea in tareas:

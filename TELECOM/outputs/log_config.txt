@@ -1,0 +1,594 @@
+[OK] 172.16.0.151
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x530L-Bod2_-100_CCTV(config)#no snmp-server community TPC
+% Specified community does not exist
+x530L-Bod2_-100_CCTV(config)#no snmp-server location
+x530L-Bod2_-100_CCTV(config)#no log buffered size
+x530L-Bod2_-100_CCTV(config)#no log permanent size
+x530L-Bod2_-100_CCTV(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x530L-Bod2_-100_CCTV(config)#exit
+x530L-Bod2_-100_CCTV#
+[OK] 172.16.0.150
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x530_Bod2_-100H(config)#no snmp-server community TPC
+% Specified community does not exist
+x530_Bod2_-100H(config)#no snmp-server location
+x530_Bod2_-100H(config)#no log buffered size
+x530_Bod2_-100H(config)#no log permanent size
+x530_Bod2_-100H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x530_Bod2_-100H(config)#exit
+x530_Bod2_-100H#
+[OK] 172.16.0.118
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P-100_CCTVROOM-x230(config)#no snmp-server community TPC
+% Specified community does not exist
+P-100_CCTVROOM-x230(config)#no snmp-server location
+P-100_CCTVROOM-x230(config)#no log buffered size
+P-100_CCTVROOM-x230(config)#no log permanent size
+P-100_CCTVROOM-x230(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P-100_CCTVROOM-x230(config)#exit
+P-100_CCTVROOM-x230#
+[OK] 172.16.0.101
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510_-100H(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+x510_-100H(config)#no snmp-server location
+x510_-100H(config)#no log buffered size
+x510_-100H(config)#no log permanent size
+x510_-100H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510_-100H(config)#exit
+x510_-100H#
+[OK] 172.16.0.147
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P-100_SW2-x510(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P-100_SW2-x510(config)#no snmp-server location
+P-100_SW2-x510(config)#no log buffered size
+P-100_SW2-x510(config)#no log permanent size
+P-100_SW2-x510(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P-100_SW2-x510(config)#exit
+P-100_SW2-x510#
+[OK] 172.16.0.148
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P-100_SW_x510-52GPX(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P-100_SW_x510-52GPX(config)#no snmp-server location
+P-100_SW_x510-52GPX(config)#no log buffered size
+P-100_SW_x510-52GPX(config)#no log permanent size
+P-100_SW_x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P-100_SW_x510-52GPX(config)#exit
+P-100_SW_x510-52GPX#
+[OK] 172.16.0.116
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510-28GPX_-100H(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+x510-28GPX_-100H(config)#no snmp-server location
+x510-28GPX_-100H(config)#no log buffered size
+x510-28GPX_-100H(config)#no log permanent size
+x510-28GPX_-100H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510-28GPX_-100H(config)#exit
+x510-28GPX_-100H#
+[OK] 172.16.0.105
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x310_000H(config)#no snmp-server community TPC
+% Specified community does not exist
+x310_000H(config)#no snmp-server location
+x310_000H(config)#no log buffered size
+x310_000H(config)#no log permanent size
+x310_000H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x310_000H(config)#exit
+x310_000H#
+[OK] 172.16.0.103
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510_000H(config)#no snmp-server community TPC
+% Specified community does not exist
+x510_000H(config)#no snmp-server location
+x510_000H(config)#no log buffered size
+x510_000H(config)#no log permanent size
+x510_000H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510_000H(config)#exit
+x510_000H#
+[OK] 172.16.0.104
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510-GPX_000H(config)#no snmp-server community TPC
+% Specified community does not exist
+x510-GPX_000H(config)#no snmp-server location
+x510-GPX_000H(config)#no log buffered size
+x510-GPX_000H(config)#no log permanent size
+x510-GPX_000H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510-GPX_000H(config)#exit
+x510-GPX_000H#
+[OK] 172.16.0.142
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+X530L-52GT_FARMACIA_TPC(config)#no snmp-server community TPC
+% Specified community does not exist
+X530L-52GT_FARMACIA_TPC(config)#no snmp-server location
+X530L-52GT_FARMACIA_TPC(config)#no log buffered size
+X530L-52GT_FARMACIA_TPC(config)#no log permanent size
+X530L-52GT_FARMACIA_TPC(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+X530L-52GT_FARMACIA_TPC(config)#exit
+X530L-52GT_FARMACIA_TPC#
+[OK] 172.16.0.143
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510_000H_2(config)#no snmp-server community TPC
+% Specified community does not exist
+x510_000H_2(config)#no snmp-server location
+x510_000H_2(config)#no log buffered size
+x510_000H_2(config)#no log permanent size
+x510_000H_2(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510_000H_2(config)#exit
+x510_000H_2#
+[OK] 172.16.0.106
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510GPX_050H(config)#no snmp-server community TPC
+% Specified community does not exist
+x510GPX_050H(config)#no snmp-server location
+x510GPX_050H(config)#no log buffered size
+x510GPX_050H(config)#no log permanent size
+x510GPX_050H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510GPX_050H(config)#exit
+x510GPX_050H#
+[OK] 172.16.0.107
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x310_050H(config)#no snmp-server community TPC
+% Specified community does not exist
+x310_050H(config)#no snmp-server location
+x310_050H(config)#no log buffered size
+x310_050H(config)#no log permanent size
+x310_050H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x310_050H(config)#exit
+x310_050H#
+[OK] 172.16.0.108
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACK1-x510-52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACK1-x510-52GPX(config)#no snmp-server location
+P06-STACK1-x510-52GPX(config)#no log buffered size
+P06-STACK1-x510-52GPX(config)#no log permanent size
+P06-STACK1-x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACK1-x510-52GPX(config)#exit
+P06-STACK1-x510-52GPX#
+[OK] 172.16.0.109
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACK02-310x(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACK02-310x(config)#no snmp-server location
+P06-STACK02-310x(config)#no log buffered size
+P06-STACK02-310x(config)#no log permanent size
+P06-STACK02-310x(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACK02-310x(config)#exit
+P06-STACK02-310x#
+[OK] 172.16.0.202
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACKT05-510x(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACKT05-510x(config)#no snmp-server location
+P06-STACKT05-510x(config)#no log buffered size
+P06-STACKT05-510x(config)#no log permanent size
+P06-STACKT05-510x(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACKT05-510x(config)#exit
+P06-STACKT05-510x#
+[OK] 172.16.0.140
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACK03-530x(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACK03-530x(config)#no snmp-server location
+P06-STACK03-530x(config)#no log buffered size
+P06-STACK03-530x(config)#no log permanent size
+P06-STACK03-530x(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACK03-530x(config)#exit
+P06-STACK03-530x#
+[OK] 172.16.0.224
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACKT07-510x(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACKT07-510x(config)#no snmp-server location
+P06-STACKT07-510x(config)#no log buffered size
+P06-STACKT07-510x(config)#no log permanent size
+P06-STACKT07-510x(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACKT07-510x(config)#exit
+P06-STACKT07-510x#
+[OK] 172.16.0.146
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACK04-530x(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACK04-530x(config)#no snmp-server location
+P06-STACK04-530x(config)#no log buffered size
+P06-STACK04-530x(config)#no log permanent size
+P06-STACK04-530x(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACK04-530x(config)#exit
+P06-STACK04-530x#
+[OK] 172.16.0.110
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P07-SW1_x510-52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P07-SW1_x510-52GPX(config)#no snmp-server location
+P07-SW1_x510-52GPX(config)#no log buffered size
+P07-SW1_x510-52GPX(config)#no log permanent size
+P07-SW1_x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P07-SW1_x510-52GPX(config)#exit
+P07-SW1_x510-52GPX#
+[OK] 172.16.0.111
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P07-SW03_x510-28GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P07-SW03_x510-28GPX(config)#no snmp-server location
+P07-SW03_x510-28GPX(config)#no log buffered size
+P07-SW03_x510-28GPX(config)#no log permanent size
+P07-SW03_x510-28GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P07-SW03_x510-28GPX(config)#exit
+P07-SW03_x510-28GPX#
+[OK] 172.16.0.112
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P07-SW04_x310(config)#no snmp-server community TPC
+% Specified community does not exist
+P07-SW04_x310(config)#no snmp-server location
+P07-SW04_x310(config)#no log buffered size
+P07-SW04_x310(config)#no log permanent size
+P07-SW04_x310(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P07-SW04_x310(config)#exit
+P07-SW04_x310#
+[OK] 172.16.0.141
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P07-SW2_x510-52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P07-SW2_x510-52GPX(config)#no snmp-server location
+P07-SW2_x510-52GPX(config)#no log buffered size
+P07-SW2_x510-52GPX(config)#no log permanent size
+P07-SW2_x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P07-SW2_x510-52GPX(config)#exit
+P07-SW2_x510-52GPX#
+[OK] 172.16.0.115
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x530L-28GT_700H-TorreA(config)#no snmp-server community TPC
+% Specified community does not exist
+x530L-28GT_700H-TorreA(config)#no snmp-server location
+x530L-28GT_700H-TorreA(config)#no log buffered size
+x530L-28GT_700H-TorreA(config)#no log permanent size
+x530L-28GT_700H-TorreA(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x530L-28GT_700H-TorreA(config)#exit
+x530L-28GT_700H-TorreA#
+[OK] 172.16.0.149
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P18-SWITCH1-x530L-52GPX(config)#no snmp-server community TPC
+Specified community does not exist
+P18-SWITCH1-x530L-52GPX(config)#no snmp-server location
+P18-SWITCH1-x530L-52GPX(config)#no log buffered size
+                                                ^
+% Invalid input detected at '^' marker.
+
+P18-SWITCH1-x530L-52GPX(config)#no log permanent size
+                                                 ^
+% Invalid input detected at '^' marker.
+
+P18-SWITCH1-x530L-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P18-SWITCH1-x530L-52GPX(config)#exit
+P18-SWITCH1-x530L-52GPX#
+[OK] 172.16.0.113
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P08-STACK01-x510_52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P08-STACK01-x510_52GPX(config)#no snmp-server location
+P08-STACK01-x510_52GPX(config)#no log buffered size
+P08-STACK01-x510_52GPX(config)#no log permanent size
+P08-STACK01-x510_52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P08-STACK01-x510_52GPX(config)#exit
+P08-STACK01-x510_52GPX#
+[OK] 172.16.0.114
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P08-STACK02-x310(config)#no snmp-server community TPC
+% Specified community does not exist
+P08-STACK02-x310(config)#no snmp-server location
+P08-STACK02-x310(config)#no log buffered size
+P08-STACK02-x310(config)#no log permanent size
+P08-STACK02-x310(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P08-STACK02-x310(config)#exit
+P08-STACK02-x310#
+[OK] 172.16.0.120
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510-GSX_900H(config)#no snmp-server community TPC
+% Specified community does not exist
+x510-GSX_900H(config)#no snmp-server location
+x510-GSX_900H(config)#no log buffered size
+x510-GSX_900H(config)#no log permanent size
+x510-GSX_900H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510-GSX_900H(config)#exit
+x510-GSX_900H#
+[OK] 172.16.0.121
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x510_900H(config)#no snmp-server community TPC
+% Specified community does not exist
+x510_900H(config)#no snmp-server location
+x510_900H(config)#no log buffered size
+x510_900H(config)#no log permanent size
+x510_900H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x510_900H(config)#exit
+x510_900H#
+[OK] 172.16.0.119
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P06-STACKT06-310x(config)#no snmp-server community TPC
+% Specified community does not exist
+P06-STACKT06-310x(config)#no snmp-server location
+P06-STACKT06-310x(config)#no log buffered size
+P06-STACKT06-310x(config)#no log permanent size
+P06-STACKT06-310x(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P06-STACKT06-310x(config)#exit
+P06-STACKT06-310x#
+[OK] 172.16.0.123
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P10-STACK01-x510_52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P10-STACK01-x510_52GPX(config)#no snmp-server location
+P10-STACK01-x510_52GPX(config)#no log buffered size
+P10-STACK01-x510_52GPX(config)#no log permanent size
+P10-STACK01-x510_52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P10-STACK01-x510_52GPX(config)#exit
+P10-STACK01-x510_52GPX#
+[OK] 172.16.0.124
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P10-STACK02_x310(config)#no snmp-server community TPC
+% Specified community does not exist
+P10-STACK02_x310(config)#no snmp-server location
+P10-STACK02_x310(config)#no log buffered size
+P10-STACK02_x310(config)#no log permanent size
+P10-STACK02_x310(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P10-STACK02_x310(config)#exit
+P10-STACK02_x310#
+[OK] 172.16.0.125
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P11-STACK01_x510-52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P11-STACK01_x510-52GPX(config)#no snmp-server location
+P11-STACK01_x510-52GPX(config)#no log buffered size
+P11-STACK01_x510-52GPX(config)#no log permanent size
+P11-STACK01_x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P11-STACK01_x510-52GPX(config)#exit
+P11-STACK01_x510-52GPX#
+[OK] 172.16.0.137
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P11-STACK02_x510-52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P11-STACK02_x510-52GPX(config)#no snmp-server location
+P11-STACK02_x510-52GPX(config)#no log buffered size
+P11-STACK02_x510-52GPX(config)#no log permanent size
+P11-STACK02_x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P11-STACK02_x510-52GPX(config)#exit
+P11-STACK02_x510-52GPX#
+[OK] 172.16.0.126
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P11-STACK02_x310(config)#no snmp-server community TPC
+% Specified community does not exist
+P11-STACK02_x310(config)#no snmp-server location
+P11-STACK02_x310(config)#no log buffered size
+P11-STACK02_x310(config)#no log permanent size
+P11-STACK02_x310(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P11-STACK02_x310(config)#exit
+P11-STACK02_x310#
+[OK] 172.16.0.139
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+X510L_GT_1100H_BMS(config)#no snmp-server community TPC
+% Specified community does not exist
+X510L_GT_1100H_BMS(config)#no snmp-server location
+X510L_GT_1100H_BMS(config)#no log buffered size
+X510L_GT_1100H_BMS(config)#no log permanent size
+X510L_GT_1100H_BMS(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+X510L_GT_1100H_BMS(config)#exit
+X510L_GT_1100H_BMS#
+[OK] 172.16.0.127
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P14-STACK01-x510_52GPX(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P14-STACK01-x510_52GPX(config)#no snmp-server location
+P14-STACK01-x510_52GPX(config)#no log buffered size
+P14-STACK01-x510_52GPX(config)#no log permanent size
+P14-STACK01-x510_52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P14-STACK01-x510_52GPX(config)#exit
+P14-STACK01-x510_52GPX#
+[OK] 172.16.0.128
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P14-STACK02-x310(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P14-STACK02-x310(config)#no snmp-server location
+P14-STACK02-x310(config)#no log buffered size
+P14-STACK02-x310(config)#no log permanent size
+P14-STACK02-x310(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P14-STACK02-x310(config)#exit
+P14-STACK02-x310#
+[OK] 172.16.0.130
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P16-STACK3-x310-26FP(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P16-STACK3-x310-26FP(config)#no snmp-server location
+P16-STACK3-x310-26FP(config)#no log buffered size
+P16-STACK3-x310-26FP(config)#no log permanent size
+P16-STACK3-x310-26FP(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P16-STACK3-x310-26FP(config)#exit
+P16-STACK3-x310-26FP#
+[OK] 172.16.0.138
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P16-STACK2-x510-52GPX(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P16-STACK2-x510-52GPX(config)#no snmp-server location
+P16-STACK2-x510-52GPX(config)#no log buffered size
+P16-STACK2-x510-52GPX(config)#no log permanent size
+P16-STACK2-x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P16-STACK2-x510-52GPX(config)#exit
+P16-STACK2-x510-52GPX#
+[OK] 172.16.0.131
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P17-STACK1-x510-52GPX(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P17-STACK1-x510-52GPX(config)#no snmp-server location
+P17-STACK1-x510-52GPX(config)#no log buffered size
+P17-STACK1-x510-52GPX(config)#no log permanent size
+P17-STACK1-x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P17-STACK1-x510-52GPX(config)#exit
+P17-STACK1-x510-52GPX#
+[OK] 172.16.0.132
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P17-STACK2-x310-26FP(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P17-STACK2-x310-26FP(config)#no snmp-server location
+P17-STACK2-x310-26FP(config)#no log buffered size
+P17-STACK2-x310-26FP(config)#no log permanent size
+P17-STACK2-x310-26FP(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P17-STACK2-x310-26FP(config)#exit
+P17-STACK2-x310-26FP#
+[OK] 172.16.0.136
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P17-STACK2-x510-52GPX(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P17-STACK2-x510-52GPX(config)#no snmp-server location
+P17-STACK2-x510-52GPX(config)#no log buffered size
+P17-STACK2-x510-52GPX(config)#no log permanent size
+P17-STACK2-x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P17-STACK2-x510-52GPX(config)#exit
+P17-STACK2-x510-52GPX#
+[OK] 172.16.0.133
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P18-STACK1-x510-52GPX(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P18-STACK1-x510-52GPX(config)#no snmp-server location
+P18-STACK1-x510-52GPX(config)#no log buffered size
+P18-STACK1-x510-52GPX(config)#no log permanent size
+P18-STACK1-x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P18-STACK1-x510-52GPX(config)#exit
+P18-STACK1-x510-52GPX#
+[OK] 172.16.0.134
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P18-STACK2-x310-26FP(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+P18-STACK2-x310-26FP(config)#no snmp-server location
+P18-STACK2-x310-26FP(config)#no log buffered size
+P18-STACK2-x310-26FP(config)#no log permanent size
+P18-STACK2-x310-26FP(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P18-STACK2-x310-26FP(config)#exit
+P18-STACK2-x310-26FP#
+[OK] 172.16.0.135
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+P18-SWITCH2-x510-52GPX(config)#no snmp-server community TPC
+% Specified community does not exist
+P18-SWITCH2-x510-52GPX(config)#no snmp-server location
+P18-SWITCH2-x510-52GPX(config)#no log buffered size
+P18-SWITCH2-x510-52GPX(config)#no log permanent size
+P18-SWITCH2-x510-52GPX(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+P18-SWITCH2-x510-52GPX(config)#exit
+P18-SWITCH2-x510-52GPX#
+[OK] 172.16.0.200
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+LAB-ADMIN-N000(config)#no snmp-server community TPC
+Community TPC has been deleted, no traps will be sent to associated host address(es)
+LAB-ADMIN-N000(config)#no snmp-server location
+LAB-ADMIN-N000(config)#no log buffered size
+LAB-ADMIN-N000(config)#no log permanent size
+LAB-ADMIN-N000(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+LAB-ADMIN-N000(config)#exit
+LAB-ADMIN-N000#
+[OK] 172.16.0.145
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+x530_CCTV_2800H(config)#no snmp-server community TPC
+% Specified community does not exist
+x530_CCTV_2800H(config)#no snmp-server location
+x530_CCTV_2800H(config)#no log buffered size
+x530_CCTV_2800H(config)#no log permanent size
+x530_CCTV_2800H(config)#no log host 172.16.0.254
+% Log destination 172.16.0.254 does not exist
+x530_CCTV_2800H(config)#exit
+x530_CCTV_2800H#
