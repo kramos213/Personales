@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""
-Network audit scanner rápido y con visibilidad:
- - ping-scan por subnet para hosts activos
- - escaneo de puertos en lote por subnet
- - medición de latencia (ping) y pérdida
- - barra de progreso y logs
- - CSV por subnet + CSV consolidado
-Ajusta EXPORT_FOLDER y ARCHIVO_REDES arriba.
-"""
+
 import os
 import csv
 import re
@@ -80,7 +72,7 @@ def medir_latencia_win(ip, intentos=PING_INTENTOS):
         return {"min": None, "max": None, "avg": None, "loss": 100}
 
     if not tiempos:
-        loss = round(100, 2)
+        loss = 100
         return {"min": None, "max": None, "avg": None, "loss": loss}
 
     loss = round((1 - len(tiempos) / hechos) * 100, 2)
@@ -113,9 +105,8 @@ def scan_network_fast(red):
     if not hosts_activos:
         return []
 
-    # 2) Port scan en lote
+    # 2) Port scan
     print(f"🔍 Escaneando puertos en {red} ...")
-
     try:
         nm.scan(hosts=red, ports=PUERTOS_COMUNES, arguments='-T4 -n')
     except Exception as e:
@@ -132,9 +123,6 @@ def scan_network_fast(red):
         if status != "up":
             continue
 
-        # --------------------
-        # Puertos abiertos
-        # --------------------
         puertos = []
         for proto in ("tcp", "udp"):
             ports = info.get(proto, {})
@@ -142,15 +130,9 @@ def scan_network_fast(red):
                 if pdata.get("state") == "open":
                     puertos.append(str(p))
 
-        # --------------------
-        # MAC / Vendor
-        # --------------------
         mac = info.get("addresses", {}).get("mac", "")
         vendor = info.get("vendor", {}).get(mac, "") if mac else ""
 
-        # --------------------
-        # Hostname
-        # --------------------
         hostname = ""
         try:
             hlist = info.get("hostnames", [])
@@ -162,9 +144,6 @@ def scan_network_fast(red):
         if not hostname:
             hostname = safe_hostname(host)
 
-        # --------------------
-        # Latencia
-        # --------------------
         lat = medir_latencia_win(host, PING_INTENTOS)
 
         results.append({
@@ -186,21 +165,57 @@ def scan_network_fast(red):
 
 
 # ==============================
-# REDES
+# LEER GRUPOS Y REDES
 # ==============================
-def cargar_redes(ruta):
+def cargar_grupos_y_redes(ruta):
+    grupos = {}
+    grupo_actual = None
+
     if not os.path.exists(ruta):
         print(f"❌ No existe {ruta}")
-        return []
+        return grupos
 
-    redes = []
     with open(ruta, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            if line and not line.startswith("#"):
-                redes.append(line)
+            if not line or line.startswith("#"):
+                continue
 
-    return redes
+            # Si es un grupo: [NOMBRE]
+            if line.startswith("[") and line.endswith("]"):
+                grupo_actual = line[1:-1].strip()
+                grupos[grupo_actual] = []
+                continue
+
+            # Si es una red
+            if grupo_actual:
+                grupos[grupo_actual].append(line)
+
+    return grupos
+
+
+# ==============================
+# MENÚ
+# ==============================
+def seleccionar_grupo(grupos):
+    print("\n📌 Grupos disponibles:")
+    for i, g in enumerate(grupos.keys(), start=1):
+        print(f"{i}. {g}")
+
+    print("0. TODOS LOS GRUPOS")
+
+    op = input("\nSelecciona un grupo (número): ").strip()
+
+    if op == "0":
+        return None  # TODOS
+
+    try:
+        op = int(op)
+        grupo = list(grupos.keys())[op - 1]
+        return grupo
+    except:
+        print("❌ Opción inválida")
+        return seleccionar_grupo(grupos)
 
 
 # ==============================
@@ -212,13 +227,11 @@ def export_results(all_results):
 
     output_cons = os.path.join(EXPORT_FOLDER, f"resultado_scan_consolidado_{ts}.csv")
 
-    # Consolidado
     with open(output_cons, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=CSV_FIELDS)
         w.writeheader()
         w.writerows(all_results)
 
-    # Por red
     by_red = {}
     for row in all_results:
         by_red.setdefault(row["red"], []).append(row)
@@ -240,13 +253,23 @@ def export_results(all_results):
 # ==============================
 def main():
     ensure_dirs()
-    redes = cargar_redes(ARCHIVO_REDES)
+    grupos = cargar_grupos_y_redes(ARCHIVO_REDES)
 
-    if not redes:
-        print("❌ No hay redes para escanear")
+    if not grupos:
+        print("❌ No hay grupos o redes definidas")
         return
 
-    print(f"\n📌 Iniciando auditoría: {len(redes)} redes")
+    grupo_sel = seleccionar_grupo(grupos)
+
+    # Seleccionar redes a escanear
+    if grupo_sel is None:
+        print("\n▶ Escaneando TODOS los grupos...\n")
+        redes = [r for lista in grupos.values() for r in lista]
+    else:
+        print(f"\n▶ Escaneando solo el grupo: {grupo_sel}\n")
+        redes = grupos[grupo_sel]
+
+    print(f"📌 Redes a escanear: {len(redes)}")
     start_total = time.perf_counter()
 
     all_results = []
