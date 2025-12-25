@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 from tqdm import tqdm
 import nmap
+import ipaddress
 
 # ==============================
 # CONFIG
@@ -19,7 +20,7 @@ PUERTOS_COMUNES = "22,80,443,445,3389,5900,8080,8443"
 PING_INTENTOS = 3
 
 CSV_FIELDS = [
-    "red", "ip", "hostname", "mac", "vendor",
+    "red", "ip", "hostname", "estado", "mac", "vendor",
     "puertos", "lat_min_ms", "lat_max_ms",
     "lat_avg_ms", "loss_pct"
 ]
@@ -43,6 +44,18 @@ def safe_hostname(ip):
         return socket.gethostbyaddr(ip)[0]
     except:
         return ""
+
+
+# ==============================
+# IP GENERATOR
+# ==============================
+def generar_ips_de_red(red):
+    """Devuelve todas las IP válidas según la máscara."""
+    try:
+        return [str(ip) for ip in ipaddress.ip_network(red, strict=False).hosts()]
+    except Exception as e:
+        print(f"❌ Error generando IPs de {red}: {e}")
+        return []
 
 
 # ==============================
@@ -85,14 +98,21 @@ def medir_latencia_win(ip, intentos=PING_INTENTOS):
 
 
 # ==============================
-# ESCANEO DE RED
+# ESCANEO
 # ==============================
 def scan_network_fast(red):
     nm = nmap.PortScanner()
-    print(f"\n🔎 Escaneando red (ping) -> {red}")
+    print(f"\n🔎 Escaneando red -> {red}")
     start = time.perf_counter()
 
-    # 1) Ping scan
+    # Lista completa de IPs
+    todas_ips = generar_ips_de_red(red)
+
+    if not todas_ips:
+        print(f"❌ No se pudieron generar IPs para {red}")
+        return []
+
+    # 1) Ping scan rápido
     try:
         nm.scan(hosts=red, arguments='-sn -n')
     except Exception as e:
@@ -100,56 +120,54 @@ def scan_network_fast(red):
         return []
 
     hosts_activos = nm.all_hosts()
-    print(f"➡ Hosts activos: {len(hosts_activos)}")
 
-    if not hosts_activos:
-        return []
+    # 2) Escaneo de puertos solo para IP activas
+    if hosts_activos:
+        try:
+            nm.scan(hosts=" ".join(hosts_activos), ports=PUERTOS_COMUNES, arguments='-T4 -n')
+        except Exception as e:
+            print(f"❌ Error port-scan {red}: {e}")
 
-    # 2) Port scan
-    print(f"🔍 Escaneando puertos en {red} ...")
-    try:
-        nm.scan(hosts=red, ports=PUERTOS_COMUNES, arguments='-T4 -n')
-    except Exception as e:
-        print(f"❌ Error port-scan {red}: {e}")
-        return []
-
-    results = []
     scan_data = nm._scan_result.get("scan", {})
 
-    for host in tqdm(hosts_activos, desc=f"Procesando {red}", unit="host"):
-        info = scan_data.get(host, {})
-        status = info.get("status", {}).get("state", "")
+    resultados = []
 
-        if status != "up":
-            continue
+    # =====================================
+    # RECORRER TODAS LAS IP DE LA RED
+    # =====================================
+    for ip in tqdm(todas_ips, desc=f"Procesando {red}", unit="ip"):
 
+        info = scan_data.get(ip, {})
+        esta_up = ip in hosts_activos
+
+        hostname = safe_hostname(ip) if esta_up else ""
+        mac = ""
+        vendor = ""
         puertos = []
-        for proto in ("tcp", "udp"):
-            ports = info.get(proto, {})
-            for p, pdata in ports.items():
-                if pdata.get("state") == "open":
-                    puertos.append(str(p))
 
-        mac = info.get("addresses", {}).get("mac", "")
-        vendor = info.get("vendor", {}).get(mac, "") if mac else ""
+        if esta_up:
+            mac = info.get("addresses", {}).get("mac", "")
+            vendor = info.get("vendor", {}).get(mac, "") if mac else ""
 
-        hostname = ""
-        try:
-            hlist = info.get("hostnames", [])
-            if hlist and "name" in hlist[0]:
-                hostname = hlist[0]["name"]
-        except:
-            hostname = ""
+            for proto in ("tcp", "udp"):
+                ports = info.get(proto, {})
+                for p, pdata in ports.items():
+                    if pdata.get("state") == "open":
+                        puertos.append(str(p))
+
+        # Latencia
+        lat = medir_latencia_win(ip, PING_INTENTOS)
+
+        estado = "UP" if esta_up else "DOWN"
 
         if not hostname:
-            hostname = safe_hostname(host)
+            hostname = "DISPONIBLE" if esta_up else ""
 
-        lat = medir_latencia_win(host, PING_INTENTOS)
-
-        results.append({
+        resultados.append({
             "red": red,
-            "ip": host,
+            "ip": ip,
             "hostname": hostname,
+            "estado": estado,
             "mac": mac,
             "vendor": vendor,
             "puertos": ", ".join(puertos),
@@ -159,13 +177,12 @@ def scan_network_fast(red):
             "loss_pct": lat["loss"]
         })
 
-    t = time.perf_counter() - start
-    print(f"⏱ Tiempo red {red}: {t:.1f}s")
-    return results
+    print(f"⏱ Tiempo red {red}: {time.perf_counter() - start:.1f}s")
+    return resultados
 
 
 # ==============================
-# LEER GRUPOS Y REDES
+# LEER GRUPOS
 # ==============================
 def cargar_grupos_y_redes(ruta):
     grupos = {}
@@ -181,13 +198,11 @@ def cargar_grupos_y_redes(ruta):
             if not line or line.startswith("#"):
                 continue
 
-            # Si es un grupo: [NOMBRE]
             if line.startswith("[") and line.endswith("]"):
                 grupo_actual = line[1:-1].strip()
                 grupos[grupo_actual] = []
                 continue
 
-            # Si es una red
             if grupo_actual:
                 grupos[grupo_actual].append(line)
 
@@ -207,12 +222,11 @@ def seleccionar_grupo(grupos):
     op = input("\nSelecciona un grupo (número): ").strip()
 
     if op == "0":
-        return None  # TODOS
+        return None
 
     try:
         op = int(op)
-        grupo = list(grupos.keys())[op - 1]
-        return grupo
+        return list(grupos.keys())[op - 1]
     except:
         print("❌ Opción inválida")
         return seleccionar_grupo(grupos)
@@ -256,12 +270,11 @@ def main():
     grupos = cargar_grupos_y_redes(ARCHIVO_REDES)
 
     if not grupos:
-        print("❌ No hay grupos o redes definidas")
+        print("❌ No hay grupos definidos")
         return
 
     grupo_sel = seleccionar_grupo(grupos)
 
-    # Seleccionar redes a escanear
     if grupo_sel is None:
         print("\n▶ Escaneando TODOS los grupos...\n")
         redes = [r for lista in grupos.values() for r in lista]
@@ -279,10 +292,10 @@ def main():
             data = scan_network_fast(red)
             all_results.extend(data)
         except KeyboardInterrupt:
-            print("⛔ Interrumpido")
+            print("⛔ Interrumpido por el usuario")
             break
 
-    print(f"\n✅ Auditoría completa - {len(all_results)} hosts detectados")
+    print(f"\n✅ Auditoría completa - {len(all_results)} hosts generados")
     export_results(all_results)
 
     print(f"⏱ Tiempo total: {time.perf_counter() - start_total:.1f}s")
