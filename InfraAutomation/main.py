@@ -1,37 +1,47 @@
 from getpass import getpass
+from core.inventory import load_inventory
+from modules.zabbix.installer import install_zabbix_agent
 from core.ssh_client import SSHClient
 
-USERS_PRIORITY = ["root", "tech", "tpcredis"]
+MODULES = {
+    "zabbix": install_zabbix_agent,
+}
 
-def load_servers():
-    with open("inventory/linux_prod.txt") as f:
-        return [l.strip() for l in f if l.strip()]
-
-if __name__ == "__main__":
-    print("🔐 Credenciales de acceso a servidores Linux")
-
-    passwords = {}
-
-    for user in USERS_PRIORITY:
-        pwd = getpass(f"Password para usuario '{user}': ")
-        passwords[user] = pwd
-
-    servers = load_servers()
+def run_module(module_name, servers, user, password):
+    action = MODULES.get(module_name)
+    if not action:
+        print(f"Módulo {module_name} no encontrado")
+        return
 
     for host in servers:
-        connected = False
+        try:
+            ssh = SSHClient(host, user, password)
+            ssh.connect()
+            action(ssh)
+            ssh.close()
+            print(f"✅ {host} - {module_name} ejecutado correctamente")
+        except Exception as e:
+            print(f"❌ {host} - Error: {e}")
 
-        for user in USERS_PRIORITY:
-            try:
-                ssh = SSHClient(host, user, passwords[user])
-                out, err = ssh.run("hostname")
+if __name__ == "__main__":
+    inventory = load_inventory("inventory/servers.txt")
 
-                print(f"✅ {out.strip()} ({user})")
-                connected = True
-                break
+    print("Selecciona módulo:")
+    for i, m in enumerate(MODULES.keys(), 1):
+        print(f"{i}) {m}")
 
-            except Exception:
-                continue
+    module_option = int(input("Opción: "))
+    module_name = list(MODULES.keys())[module_option - 1]
 
-        if not connected:
-            print("❌ No se pudo conectar a un servidor")
+    print("Selecciona servicio:")
+    groups = list(inventory.keys())
+    for i, g in enumerate(groups, 1):
+        print(f"{i}) {g}")
+
+    service_option = int(input("Opción: "))
+    servers = inventory[groups[service_option - 1]]
+
+    user = input("Usuario SSH: ")
+    password = getpass("Password SSH: ")
+
+    run_module(module_name, servers, user, password)
