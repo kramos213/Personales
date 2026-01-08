@@ -9,7 +9,7 @@ def execute(host, user, password):
         remote_script_path = "/tmp/install_agent.sh"
 
         output = ssh.run(
-            f"chmod +x {remote_script_path} && {remote_script_path}",
+            f"{remote_script_path}",
             sudo=True
         )
 

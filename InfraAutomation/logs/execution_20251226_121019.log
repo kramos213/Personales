@@ -1,0 +1,8 @@
+2025-12-26 12:10:32,159 - INFO - Ejecutando script 'reinstaller' del módulo 'zabbix' en servicio 'SRV-ALEAR'
+2025-12-26 12:10:32,162 - INFO - Servidores: ['10.1.32.7', '10.1.32.6', '10.1.32.5', '10.1.32.1', '10.1.32.9']
+2025-12-26 12:10:32,164 - INFO - Iniciando ejecución en 10.1.32.7
+2025-12-26 12:10:32,359 - INFO - Iniciando ejecución en 10.1.32.6
+2025-12-26 12:10:32,538 - INFO - Iniciando ejecución en 10.1.32.5
+2025-12-26 12:10:32,713 - INFO - Iniciando ejecución en 10.1.32.1
+2025-12-26 12:10:32,944 - INFO - Iniciando ejecución en 10.1.32.9
+2025-12-26 12:10:33,085 - INFO - Resultado final: 0 OK / 5 FALLIDOS

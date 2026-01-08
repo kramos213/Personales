@@ -1,15 +1,9 @@
-from core.ssh_client import SSHClient
-
-def install_zabbix(host, user, password):
-    ssh = SSHClient(host, user, password)
-    ssh.connect()
-
-    ssh.upload(
-        "modules/zabbix/install_agent.sh",
-        "/tmp/install_zabbix.sh"
-    )
-
-    ssh.run("chmod +x /tmp/install_zabbix.sh")
-    ssh.run("/tmp/install_zabbix.sh", sudo=True)
-
-    ssh.close()
+def run_module(module_execute_func, hosts, user, password):
+    results = {}
+    for host in hosts:
+        try:
+            output = module_execute_func(host, user, password)
+            results[host] = ("success", output)
+        except Exception as e:
+            results[host] = ("error", str(e))
+    return results

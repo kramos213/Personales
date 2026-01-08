@@ -1,0 +1,10 @@
+2025-12-26 10:43:04,941 - INFO - Ejecutando módulo 'zabbix' en servicio 'SRV-MV'
+2025-12-26 10:43:04,941 - INFO - Servidores: ['10.1.1.126', '10.1.1.120', '10.1.1.121', '10.1.1.122', '10.1.1.123', '10.1.1.124', '10.1.1.125']
+2025-12-26 10:43:04,942 - INFO - Iniciando ejecución en 10.1.1.126
+2025-12-26 10:43:05,534 - INFO - Iniciando ejecución en 10.1.1.120
+2025-12-26 10:43:06,200 - INFO - Iniciando ejecución en 10.1.1.121
+2025-12-26 10:43:06,723 - INFO - Iniciando ejecución en 10.1.1.122
+2025-12-26 10:43:07,229 - INFO - Iniciando ejecución en 10.1.1.123
+2025-12-26 10:43:07,695 - INFO - Iniciando ejecución en 10.1.1.124
+2025-12-26 10:43:08,130 - INFO - Iniciando ejecución en 10.1.1.125
+2025-12-26 10:43:08,593 - INFO - Resultado final: 7 OK / 0 FALLIDOS

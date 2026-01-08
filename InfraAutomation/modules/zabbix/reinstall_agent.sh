@@ -14,7 +14,7 @@ ZABBIX_SERVER="10.1.1.201"
 HOSTNAME_LOCAL=$(hostname)
 
 echo "======================================="
-echo " Instalador Universal Zabbix Agent"
+echo " Reinstalador Universal Zabbix Agent"
 echo "======================================="
 
 fail() {
@@ -48,11 +48,40 @@ echo "➡ Init: $INIT"
 echo "➡ Servicio: $SERVICE"
 
 # ======================
-# INSTALAR AGENTE
+# FUNCIONES
 # ======================
+stop_service() {
+  echo "Deteniendo servicio..."
+  if [ "$INIT" == "systemd" ]; then
+    systemctl stop "$SERVICE" || true
+  else
+    service "$SERVICE" stop || true
+  fi
+}
+
+remove_agent() {
+  echo "Eliminando agente previo..."
+  case "$ID" in
+    ol|rhel|centos|rocky|almalinux)
+      if [ "$MAJOR" -ge 8 ]; then
+        dnf remove -y zabbix-agent || true
+      else
+        yum remove -y zabbix-agent || true
+      fi
+      ;;
+    ubuntu|debian)
+      apt-get remove -y zabbix-agent || true
+      ;;
+  esac
+}
+
+clean_files() {
+  echo "Limpiando archivos residuales..."
+  rm -rf /etc/zabbix /var/log/zabbix /var/run/zabbix
+}
+
 install_agent() {
   echo "Instalando zabbix-agent..."
-
   case "$ID" in
     ol|rhel|centos|rocky|almalinux)
       if [ "$MAJOR" -ge 9 ]; then
@@ -63,8 +92,6 @@ install_agent() {
         rpm -Uvh https://repo.zabbix.com/zabbix/6.0/rhel/7/x86_64/zabbix-release-6.0-4.el7.noarch.rpm
       elif [ "$MAJOR" == "6" ]; then
         rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/6/x86_64/zabbix-release-5.0-1.el6.noarch.rpm
-      else
-        fail "Versión RHEL no soportada"
       fi
 
       if [ "$MAJOR" -ge 8 ]; then
@@ -77,18 +104,10 @@ install_agent() {
       apt update
       apt install -y zabbix-agent
       ;;
-    *)
-      fail "SO no soportado"
-      ;;
   esac
 }
 
-# ======================
-# CONFIGURAR AGENTE
-# ======================
 configure_agent() {
-  echo "Configurando agente..."
-
   mkdir -p /etc/zabbix /var/log/zabbix /var/run/zabbix
 
   cat > /etc/zabbix/zabbix_agentd.conf <<EOF
@@ -101,12 +120,7 @@ Include=/etc/zabbix/zabbix_agentd.d/*.conf
 EOF
 }
 
-# ======================
-# INICIAR SERVICIO
-# ======================
 start_service() {
-  echo "Iniciando servicio..."
-
   if [ "$INIT" == "systemd" ]; then
     systemctl enable "$SERVICE"
     systemctl restart "$SERVICE"
@@ -119,12 +133,15 @@ start_service() {
 # ======================
 # EJECUCIÓN
 # ======================
+stop_service
+remove_agent
+clean_files
 install_agent
 configure_agent
 start_service
 
 echo "======================================="
-echo "✅ Zabbix Agent instalado correctamente"
+echo "✅ Zabbix Agent reinstalado correctamente"
 echo "Hostname: $HOSTNAME_LOCAL"
 echo "Server:   $ZABBIX_SERVER"
 echo "Servicio: $SERVICE"

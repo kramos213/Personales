@@ -1,6 +1,3 @@
-no username dpari
-no username FLOWIT 
-
-no ssh server allow-users FLOWIT
-
-
+vlan database
+vlan 300 name VOZELIA01
+vlan 301 name VOZELIA02

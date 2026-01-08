@@ -1,0 +1,10 @@
+2025-12-26 11:01:59,376 - INFO - Ejecutando script 'reinstaller' del módulo 'zabbix' en servicio 'SRV-MV'
+2025-12-26 11:01:59,377 - INFO - Servidores: ['10.1.1.126', '10.1.1.120', '10.1.1.121', '10.1.1.122', '10.1.1.123', '10.1.1.124', '10.1.1.125']
+2025-12-26 11:01:59,378 - INFO - Iniciando ejecución en 10.1.1.126
+2025-12-26 11:02:28,846 - INFO - Iniciando ejecución en 10.1.1.120
+2025-12-26 11:02:43,604 - INFO - Iniciando ejecución en 10.1.1.121
+2025-12-26 11:03:07,201 - INFO - Iniciando ejecución en 10.1.1.122
+2025-12-26 11:03:28,278 - INFO - Iniciando ejecución en 10.1.1.123
+2025-12-26 11:03:49,886 - INFO - Iniciando ejecución en 10.1.1.124
+2025-12-26 11:04:11,054 - INFO - Iniciando ejecución en 10.1.1.125
+2025-12-26 11:04:31,863 - INFO - Resultado final: 0 OK / 7 FALLIDOS

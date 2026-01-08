@@ -1,0 +1,4 @@
+2025-12-26 11:56:13,475 - INFO - Ejecutando script 'installer' del módulo 'zabbix' en servicio 'SRV-GIF'
+2025-12-26 11:56:13,477 - INFO - Servidores: ['10.1.1.139']
+2025-12-26 11:56:13,480 - INFO - Iniciando ejecución en 10.1.1.139
+2025-12-26 11:56:18,841 - INFO - Resultado final: 0 OK / 1 FALLIDOS

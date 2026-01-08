@@ -11,37 +11,38 @@ class SSHClient:
     def connect(self):
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
         self.client.connect(
             hostname=self.host,
             username=self.user,
             password=self.password,
-            timeout=self.timeout
+            timeout=self.timeout,
+            allow_agent=False,
+            look_for_keys=False
         )
 
     def run(self, command, sudo=False):
-        if not self.client:
-            raise Exception("SSH no conectado")
-
         if sudo:
-            # Enviamos la contraseña para sudo con -S
-            command = f"echo {self.password} | sudo -S {command}"
+            command = f"sudo -S {command}"
 
         stdin, stdout, stderr = self.client.exec_command(command)
 
-        output = stdout.read().decode().strip()
-        error = stderr.read().decode().strip()
+        if sudo:
+            stdin.write(self.password + "\n")
+            stdin.flush()
 
-        return output, error
+        out = stdout.read().decode(errors="ignore")
+        err = stderr.read().decode(errors="ignore")
 
-    def upload(self, local_path, remote_path):
-        if not self.client:
-            raise Exception("SSH no conectado")
+        exit_status = stdout.channel.recv_exit_status()
 
-        sftp = self.client.open_sftp()
-        sftp.put(local_path, remote_path)
-        sftp.close()
+        # ✅ SOLO fallar si el exit code es distinto de 0
+        if exit_status != 0:
+            raise Exception(err if err else out)
+
+        # ✅ devolver TODO (stdout + stderr)
+        return out + err
 
     def close(self):
         if self.client:
             self.client.close()
-            self.client = None
